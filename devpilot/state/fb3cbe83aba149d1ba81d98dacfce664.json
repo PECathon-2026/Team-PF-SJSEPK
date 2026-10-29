@@ -1,0 +1,66 @@
+{
+  "mission_id": "fb3cbe83aba149d1ba81d98dacfce664",
+  "user_request": "Hello",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Hello",
+      "acceptance_criteria": [
+        "Verify that: Hello"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "status": "running",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Hello",
+      "acceptance_criteria": [
+        "Verify that: Hello"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T17:09:15.001018+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T17:09:15.021378+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T17:09:15.051250+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "fb3cbe83aba149d1ba81d98dacfce664",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T17:09:15.066728+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

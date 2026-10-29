@@ -39,7 +39,7 @@ def run_mission(
 
     def log(event: str, **details: Any) -> None:
         current = load_mission(mission_id, state_dir=state_dir)
-        entry = {"event": event, **details}
+        entry = {"event": event, "mission_id": mission_id, **details}
         update_mission(mission_id, {"activity_log": [*current["activity_log"], entry]}, state_dir=state_dir)
         if activity_callback:
             activity_callback(entry)
@@ -103,6 +103,7 @@ def run_mission(
             except Exception as exc:
                 result = {"task_id": task_id, "attempt": attempt + 1, "passed": False, "error": f"{type(exc).__name__}: {exc}"}
             test_attempts.append(result)
+            update_mission(mission_id, {"test_results": test_attempts}, state_dir=state_dir)
             verified = result["passed"] and review["status"] == "pass"
             log("verification_completed", task_id=task_id, attempt=attempt + 1, tests_passed=result["passed"], review_status=review["status"])
             if verified:
@@ -137,6 +138,10 @@ def _read_patch(_: dict[str, Any], attempt: int) -> str | None:
 def _approve(stage: str, details: dict[str, Any]) -> bool:
     if stage == "task":
         print(f"Planned task: {details.get('description', details)}")
+        for criterion in details.get("acceptance_criteria", []):
+            print(f"Acceptance: {criterion}")
+        if details.get("relevant_files"):
+            print("Relevant files: " + ", ".join(details["relevant_files"]))
     else:
         print("Proposed patch:\n" + details["patch"])
     try:

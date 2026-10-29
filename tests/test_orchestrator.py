@@ -79,6 +79,37 @@ def test_failed_test_retries_once_then_passes(tmp_path):
     assert sample.read_text(encoding="utf-8") == "answer = 43\n"
 
 
+def test_failed_attempt_is_persisted_before_retry_request(tmp_path):
+    results = [
+        subprocess.CompletedProcess(["pytest"], 1, "1 failed", ""),
+        subprocess.CompletedProcess(["pytest"], 0, "1 passed", ""),
+    ]
+    repo_root = tmp_path / "demo_repo"
+    repo_root.mkdir()
+    (repo_root / "sample.py").write_text("answer = 41\n", encoding="utf-8")
+    state_dir = tmp_path / "state"
+    activity = []
+
+    def provide_patch(_task, attempt):
+        if attempt == 1:
+            mission_id = activity[0]["mission_id"]
+            live = load_mission(mission_id, state_dir=state_dir)
+            assert live["test_results"][0]["returncode"] == 1
+            assert live["test_results"][0]["passed"] is False
+        return make_patch("answer = 41" if attempt == 0 else "answer = 42", "answer = 42" if attempt == 0 else "answer = 43")
+
+    mission = run_mission(
+        "Set answer to 42",
+        provide_patch,
+        lambda *_: True,
+        repository=StubRepository(repo_root, results),
+        state_dir=state_dir,
+        activity_callback=activity.append,
+        max_retries=1,
+    )
+    assert mission["status"] == "completed"
+
+
 def test_bounded_retry_never_reports_success_when_tests_fail(tmp_path):
     results = [subprocess.CompletedProcess(["pytest"], 1, "failed", "") for _ in range(2)]
     patches = [make_patch("answer = 41", "answer = 42"), make_patch("answer = 42", "answer = 43")]
@@ -138,9 +169,9 @@ def test_cli_end_to_end_failure_recovery_and_final_review(tmp_path, monkeypatch,
         '# sample demo repository file\nmessage = "hello from demo_repo"\n', encoding="utf-8"
     )
     (repo_root / "test_sample.py").write_text(
-        'from sample import greet, message\n\n'
-        'def test_demo_message_is_present():\n    assert message\n\n'
-        'def test_greeting():\n    assert greet("Ada") == "Hello, Ada!"\n',
+        'import sample\n\n'
+        'def test_demo_message_is_present():\n    assert sample.message\n\n'
+        'def test_greeting():\n    assert sample.greet("Ada") == "Hello, Ada!"\n',
         encoding="utf-8",
     )
 

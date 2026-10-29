@@ -50,6 +50,20 @@ def test_review_detects_security_risk(review_setup):
     assert any(finding["code"] == "dynamic_eval" for finding in result["findings"])
 
 
+def test_reviewer_accepts_utf8_bom_in_python_files(review_setup):
+    root, _, state_dir, mission, repository, developer = review_setup
+    bom_file = root / "bom_module.py"
+    bom_file.write_bytes(b"\xef\xbb\xbfvalue = 42\n")
+    task = load_mission(mission["mission_id"], state_dir=state_dir)["tasks"][0]
+    task["relevant_files"].append("bom_module.py")
+    update_mission(mission["mission_id"], {"tasks": [task]}, state_dir=state_dir)
+    patch = "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n"
+    proposal_id = developer.propose_patch(mission["mission_id"], "task-1", patch)
+    developer.apply_proposal(mission["mission_id"], proposal_id, approved=True)
+    review = ReviewerAgent(repository, state_dir=state_dir).review_task(mission["mission_id"], "task-1")
+    assert review["status"] == "pass"
+
+
 def test_invalid_task_is_rejected(review_setup):
     _, _, state_dir, mission, _, _ = review_setup
     update_mission(mission["mission_id"], {"tasks": [{"task_id": "task-1", "acceptance_criteria": [], "relevant_files": []}]}, state_dir=state_dir)

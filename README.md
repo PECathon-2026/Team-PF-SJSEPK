@@ -49,4 +49,15 @@ The CLI records the failed test and asks for a retry. Paste this correction:
 
 Expected output includes a failed first test attempt, a retry notice, a passing second attempt, `Final review for task-1: pass`, and `Mission <id>: completed`. The CLI shows test output and review findings and returns success only when every task’s latest test and review pass. Test execution remains restricted to `demo_repo/`.
 
-The Planner, Developer, read-only Reviewer, and CLI orchestrator provide the initial coding flow. No UI, API key, or external API is required.
+The Planner, Developer, read-only Reviewer, CLI orchestrator, and Streamlit dashboard provide the initial coding flow. No API key or external API is required.
+
+## Streamlit dashboard
+
+Install dependencies and launch the dashboard from the project root:
+
+```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m streamlit run devpilot/gui.py
+```
+
+Enter a mission and select **Start Mission**. The dashboard polls persisted mission state, accepts unified diffs, and routes task and patch approval or rejection through the existing orchestrator. Repository reads, patch validation, application, test scope, and retry bounds remain enforced by the backend.

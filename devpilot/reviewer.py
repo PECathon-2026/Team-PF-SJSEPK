@@ -88,7 +88,7 @@ class ReviewerAgent:
         for name, content in source.items():
             if name.endswith(".py"):
                 try:
-                    ast.parse(content, filename=name)
+                    ast.parse(content.removeprefix("\ufeff"), filename=name)
                 except SyntaxError as exc:
                     issues.append({"category": "correctness", "code": "syntax_error", "severity": "high", "message": f"{name}:{exc.lineno}: {exc.msg}"})
 

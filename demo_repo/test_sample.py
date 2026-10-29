@@ -1,10 +1,10 @@
-﻿from sample import greet, message
+﻿import sample
 
 
 def test_demo_message_is_present():
-    assert isinstance(message, str)
-    assert message
+    assert isinstance(sample.message, str)
+    assert sample.message
 
 
 def test_greet_returns_personalized_greeting():
-    assert greet("Ada") == "Hello, Ada!"
+    assert sample.greet("Ada") == "Hello, Ada!"
