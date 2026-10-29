@@ -19,6 +19,9 @@ _RISK_PATTERNS = (
     (re.compile(r"\bexec\s*\("), "dynamic_exec", "Dynamic exec can execute untrusted input."),
     (re.compile(r"\bos\.system\s*\("), "shell_execution", "os.system executes a shell command."),
     (re.compile(r"\bshell\s*=\s*True\b"), "shell_enabled", "shell=True enables shell interpretation."),
+    (re.compile(r"\bpickle\.loads?\s*\("), "unsafe_deserialization", "Pickle can execute code while deserializing untrusted data."),
+    (re.compile(r"\byaml\.load\s*\("), "unsafe_yaml_load", "yaml.load may construct unsafe Python objects."),
+    (re.compile(r"\bverify\s*=\s*False\b"), "tls_verification_disabled", "Disabling TLS verification permits man-in-the-middle attacks."),
 )
 
 

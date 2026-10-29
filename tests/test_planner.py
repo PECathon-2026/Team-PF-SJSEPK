@@ -26,6 +26,29 @@ def test_structured_plan_has_criteria_and_relevant_files(tmp_path):
     assert plan["tasks"][0]["relevant_files"] == ["auth.py"]
 
 
+def test_planning_roles_decompose_request_and_emit_agent_activity(tmp_path):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    (root / "auth.py").write_text("def login(): pass\n", encoding="utf-8")
+    activity = []
+    plan = PlannerAgent(RepositoryTools(root)).create_plan(
+        "Improve login handling; Add logout handling",
+        activity_callback=activity.append,
+    )
+    assert [task["task_id"] for task in plan["tasks"]] == ["task-1", "task-2"]
+    assert [agent["agent"] for agent in plan["planning_agents"]] == [
+        "requirements_analyst",
+        "repository_scout",
+        "acceptance_criteria_analyst",
+    ]
+    assert all(agent["status"] == "completed" for agent in plan["planning_agents"])
+    assert [entry["agent"] for entry in activity] == [
+        "requirements_analyst",
+        "repository_scout",
+        "acceptance_criteria_analyst",
+    ]
+
+
 def test_plan_saves_tasks_to_shared_mission(tmp_path):
     repo = tmp_path / "demo_repo"
     repo.mkdir()

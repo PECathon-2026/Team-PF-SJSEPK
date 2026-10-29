@@ -78,3 +78,34 @@ def test_gui_rejection_uses_existing_approval_and_leaves_code_unchanged(tmp_path
     assert result["mission"]["status"] == "cancelled"
     assert source.read_text(encoding="utf-8") == '# sample demo repository file\nmessage = "hello from demo_repo"\n'
     assert mission_stages(result["mission"])["Mission"] == "cancelled"
+
+
+def test_gui_cancellation_releases_pending_approval(tmp_path):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    (root / "sample.py").write_text("value = 1\n", encoding="utf-8")
+    events = Queue()
+    cancel_event = threading.Event()
+    thread = threading.Thread(
+        target=run_mission_worker,
+        args=("Update value", events),
+        kwargs={
+            "repository": RepositoryTools(root),
+            "state_dir": tmp_path / "state",
+            "cancel_event": cancel_event,
+        },
+        daemon=True,
+    )
+    thread.start()
+    interaction = events.get(timeout=10)
+    while interaction["kind"] != "interaction":
+        interaction = events.get(timeout=10)
+    assert interaction["kind"] == "interaction"
+    cancel_event.set()
+    result = events.get(timeout=10)
+    while result["kind"] not in {"result", "error"}:
+        result = events.get(timeout=10)
+    thread.join(timeout=10)
+    assert not thread.is_alive()
+    assert result["kind"] == "result"
+    assert result["mission"]["status"] == "cancelled"

@@ -1,9 +1,11 @@
 ﻿"""Small, demo_repo-scoped repository operations."""
 from __future__ import annotations
 
+import os
 import re
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 
@@ -34,6 +36,8 @@ class RepositoryTools:
         return path.read_text(encoding="utf-8")
 
     def search(self, text: str) -> list[tuple[str, int, str]]:
+        if not isinstance(text, str) or not text:
+            raise ValueError("search text cannot be empty")
         matches = []
         for path in sorted(self.repo_root.rglob("*")):
             if not path.is_file():
@@ -113,18 +117,62 @@ class RepositoryTools:
         """Validate a patch against an existing demo_repo file without writing."""
         self._patched_content(patch)
 
+    def preview_patch(self, patch: str) -> dict[str, str]:
+        """Return the exact before/after content for a validated patch."""
+        path, content = self._patched_content(patch)
+        before = path.read_text(encoding="utf-8")
+        return {
+            "path": path.relative_to(self.repo_root).as_posix(),
+            "before": before,
+            "after": content,
+            "diff": patch,
+        }
+
     def apply_patch(self, patch: str) -> None:
         path, content = self._patched_content(patch)
-        path.write_text(content, encoding="utf-8")
+        temporary_path: Path | None = None
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w",
+                encoding="utf-8",
+                dir=path.parent,
+                prefix=f".{path.name}.",
+                suffix=".tmp",
+                delete=False,
+            ) as temporary:
+                temporary_path = Path(temporary.name)
+                temporary.write(content)
+            temporary_path.replace(path)
+        finally:
+            if temporary_path is not None and temporary_path.exists():
+                temporary_path.unlink()
 
     def run_tests(self) -> subprocess.CompletedProcess[str]:
-        """Run pytest only in demo_repo, with a fixed command and no shell."""
-        return subprocess.run(
-            [sys.executable, "-m", "pytest", "-q", str(self.repo_root)],
-            cwd=self.repo_root,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,
-            timeout=120,
-        )
+        """Run repository tests without loading repo config, conftest, or plugins."""
+        with tempfile.TemporaryDirectory(prefix="devpilot-pytest-") as config_dir:
+            config_path = Path(config_dir) / "pytest.ini"
+            config_path.write_text("[pytest]\n", encoding="utf-8")
+            environment = dict(os.environ)
+            environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+            environment["PYTHONDONTWRITEBYTECODE"] = "1"
+            return subprocess.run(
+                [
+                    sys.executable,
+                    "-m",
+                    "pytest",
+                    "-q",
+                    "--noconftest",
+                    "-p",
+                    "no:cacheprovider",
+                    "-c",
+                    str(config_path),
+                    str(self.repo_root),
+                ],
+                cwd=self.repo_root,
+                env=environment,
+                capture_output=True,
+                text=True,
+                check=False,
+                shell=False,
+                timeout=120,
+            )

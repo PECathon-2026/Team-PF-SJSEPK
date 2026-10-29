@@ -1,12 +1,14 @@
 ﻿import builtins
 import json
 import subprocess
+import sys
+from threading import Event
 
 import pytest
 
 from devpilot import orchestrator
 from devpilot.mission_state import load_mission
-from devpilot.orchestrator import run_mission
+from devpilot.orchestrator import MAX_RETRIES, run_mission
 from devpilot.repository_tools import RepositoryTools
 
 
@@ -16,7 +18,20 @@ class StubRepository(RepositoryTools):
         self.results = iter(results)
 
     def run_tests(self):
-        return next(self.results)
+        result = next(self.results)
+        result.args = [
+            sys.executable,
+            "-m",
+            "pytest",
+            "-q",
+            "--noconftest",
+            "-p",
+            "no:cacheprovider",
+            "-c",
+            "pytest.ini",
+            str(self.repo_root),
+        ]
+        return result
 
 
 def make_patch(before, after):
@@ -118,6 +133,58 @@ def test_bounded_retry_never_reports_success_when_tests_fail(tmp_path):
     assert mission["retry_count"] == 1
     assert len(mission["test_results"]) == 2
     assert not any(item["passed"] for item in mission["test_results"])
+
+
+def test_retry_limit_is_hard_bounded(tmp_path):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    with pytest.raises(ValueError, match="between 0 and"):
+        run_mission(
+            "Set answer to 42",
+            lambda *_: None,
+            lambda *_: True,
+            state_dir=tmp_path / "state",
+            repository=RepositoryTools(root),
+            max_retries=MAX_RETRIES + 1,
+        )
+
+
+def test_cancel_before_planning_is_persisted(tmp_path):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    cancel_event = Event()
+    cancel_event.set()
+    mission = run_mission(
+        "Set answer to 42",
+        lambda *_: None,
+        lambda *_: True,
+        state_dir=tmp_path / "state",
+        repository=RepositoryTools(root),
+        cancel_event=cancel_event,
+    )
+    assert mission["status"] == "cancelled"
+    assert any(item["event"] == "mission_cancelled" for item in mission["activity_log"])
+
+
+def test_test_timeout_is_recorded_as_a_failed_attempt(tmp_path):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    (root / "sample.py").write_text("answer = 41\n", encoding="utf-8")
+    repository = StubRepository(root, [])
+    repository.run_tests = lambda: (_ for _ in ()).throw(
+        subprocess.TimeoutExpired(["pytest"], 120, output="partial output")
+    )
+    mission = run_mission(
+        "Set answer to 42",
+        lambda *_: make_patch("answer = 41", "answer = 42"),
+        lambda *_: True,
+        state_dir=tmp_path / "state",
+        repository=repository,
+        max_retries=0,
+    )
+    assert mission["status"] == "failed"
+    assert mission["test_results"][0]["timed_out"] is True
+    assert mission["test_results"][0]["stdout"] == "partial output"
 
 
 def test_patch_approval_is_required_before_changes(tmp_path):

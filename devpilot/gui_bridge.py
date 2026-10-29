@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from queue import Queue
+from queue import Empty, Queue
+from threading import Event
 from typing import Any
 
 from .orchestrator import run_mission
@@ -19,8 +20,14 @@ class Interaction:
     def answer(self, value: Any) -> None:
         self.response.put(value)
 
-    def wait(self) -> Any:
-        return self.response.get()
+    def wait(self, cancel_event: Event | None = None) -> Any:
+        while True:
+            if cancel_event and cancel_event.is_set():
+                return None
+            try:
+                return self.response.get(timeout=0.1)
+            except Empty:
+                continue
 
 
 def mission_stages(mission: dict[str, Any]) -> dict[str, str]:
@@ -65,12 +72,13 @@ def run_mission_worker(
     repository: RepositoryTools | None = None,
     state_dir: str | Path | None = None,
     max_retries: int = 1,
+    cancel_event: Event | None = None,
 ) -> None:
     """Run the existing synchronous mission flow on a worker thread."""
     def ask(kind: str, **details: Any) -> Any:
         interaction = Interaction(kind, details)
         events.put({"kind": "interaction", "interaction": interaction})
-        return interaction.wait()
+        return interaction.wait(cancel_event)
 
     def patch_provider(task: dict[str, Any], attempt: int) -> str | None:
         return ask("patch", task=task, attempt=attempt)
@@ -86,6 +94,7 @@ def run_mission_worker(
             repository=repository,
             state_dir=state_dir,
             max_retries=max_retries,
+            cancel_event=cancel_event,
             activity_callback=lambda entry: events.put({"kind": "activity", "entry": entry}),
         )
         events.put({"kind": "result", "mission": mission})

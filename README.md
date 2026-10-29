@@ -1,64 +1,75 @@
-﻿# DevPilot
+# DevPilot
 
-DevPilot is a multi-agent AI software engineering system for PECathon PS-001.
+DevPilot is a local, approval-gated coding workflow for the PECathon PS-001
+sample repository. It plans and decomposes a request, gathers relevant files,
+requests human approval before each task and code change, runs repository tests,
+and records independent review and security findings in shared mission state.
+
+Planning uses three deterministic local roles (requirements analyst, repository
+scout, and acceptance-criteria analyst); it does not call an LLM or claim
+autonomous code generation. A developer supplies each proposed unified diff.
+Repository reads, writes, and test discovery are constrained to `demo_repo/`.
+Pytest configuration hooks, `conftest.py` files, and third-party pytest plugin
+autoload are disabled for mission test runs. Pytest and collected test code still
+execute as local Python processes (not an OS sandbox), so only approve and test
+trusted changes.
+
+## Windows setup (PowerShell)
+
+Run these commands from the repository root. Python 3.10 or newer is required.
+
+```powershell
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+Run the complete collected suite, including the demo repository tests:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+```
+
+Run the real failure-recovery end-to-end scenario. The test creates an isolated
+temporary repository, applies an intentionally incorrect greeting, observes the
+real pytest failure, applies the correction, and requires passing tests and an
+independent review before reporting completion:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q tests\test_orchestrator.py::test_cli_end_to_end_failure_recovery_and_final_review
+```
+
+## Run a CLI mission
+
+The CLI operates on the checked-in `demo_repo/`:
+
+```powershell
+.\.venv\Scripts\python.exe -m devpilot --request "Update sample.py to add a new feature." --max-retries 1
+```
+
+Review the proposed task and approve it with `y`. Paste a unified diff at each
+patch prompt and finish the diff with a line containing only `.`. Review and
+approve each patch before it is applied. A failed test or review can be
+corrected up to the configured retry count (`0` through `3`). A mission is
+reported as completed only when every task has passing tests and a passing
+review.
+
+## Run the Streamlit dashboard
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run devpilot\gui.py
+```
+
+Enter a request and select **Start Mission**. The dashboard exposes the bounded
+recovery count, task approval, a patch editor, a before/after diff preview and
+explicit patch approval. Use **Cancel Mission** to stop at the next safe
+checkpoint. Agent activity, test output, review/security findings, and persisted
+mission status are shown as the worker progresses.
 
 ## Project layout
 
-- `devpilot/` — core package with JSON-backed mission state, structured planning, approval-gated patch proposals, read-only static review, and demo_repo-scoped repository tools.
-- `devpilot/state/` — default location for persisted mission JSON files.
-- `tests/` — focused automated tests.
-- `demo_repo/` — small sample repository used for demonstrations.
-
-## Setup and live demo
-
-Create the Windows virtual environment, install dependencies, and run the full suite:
-
-```powershell
-py -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m pytest -q tests
-```
-
-The task in `demo_repo/TASK.md` adds `greet(name)` to `sample.py`, returning `Hello, {name}!`. Run the CLI:
-
-```powershell
-.\.venv\Scripts\python.exe -m devpilot --request "Add a greet(name) function to sample.py that returns a personalized greeting." --max-retries 1
-```
-
-Approve the task. At each patch prompt, paste the diff and finish with a line containing only `.`; approve applying each patch. To demonstrate recovery, use this incorrect first patch:
-
-```diff
---- a/sample.py
-+++ b/sample.py
-@@ -1,2 +1,5 @@
- # sample demo repository file
- message = "hello from demo_repo"
-+
-+def greet(name):
-+    return f"Hi, {name}!"
-```
-
-The CLI records the failed test and asks for a retry. Paste this correction:
-
-```diff
---- a/sample.py
-+++ b/sample.py
-@@ -5 +5 @@
--    return f"Hi, {name}!"
-+    return f"Hello, {name}!"
-```
-
-Expected output includes a failed first test attempt, a retry notice, a passing second attempt, `Final review for task-1: pass`, and `Mission <id>: completed`. The CLI shows test output and review findings and returns success only when every task’s latest test and review pass. Test execution remains restricted to `demo_repo/`.
-
-The Planner, Developer, read-only Reviewer, CLI orchestrator, and Streamlit dashboard provide the initial coding flow. No API key or external API is required.
-
-## Streamlit dashboard
-
-Install dependencies and launch the dashboard from the project root:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install -r requirements.txt
-.\.venv\Scripts\python.exe -m streamlit run devpilot/gui.py
-```
-
-Enter a mission and select **Start Mission**. The light dashboard polls persisted mission state, accepts unified diffs, and routes task and patch approval or rejection through the existing orchestrator. Repository reads, patch validation, application, test scope, and retry bounds remain enforced by the backend.
+- `devpilot/` — planner, developer, safe repository tools, orchestrator,
+  independent reviewer, mission persistence, and Streamlit interface.
+- `devpilot/state/` — default location for JSON-backed shared mission records.
+- `tests/` — unit, workflow, GUI, and end-to-end recovery tests.
+- `demo_repo/` — the only repository scope the built-in tools can access.
