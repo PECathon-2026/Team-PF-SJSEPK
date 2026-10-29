@@ -1,0 +1,41 @@
+{
+  "mission_id": "b0ebd85f595b48da9c1db5f1bb0e6b11",
+  "user_request": "Update login",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Update login",
+      "acceptance_criteria": [
+        "Verify that: Update login"
+      ],
+      "relevant_files": []
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Update login",
+      "acceptance_criteria": [
+        "Verify that: Update login"
+      ],
+      "relevant_files": []
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T15:55:12.237288+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T15:55:12.241250+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    }
+  ]
+}

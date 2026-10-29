@@ -15,7 +15,10 @@ class RepositoryTools:
             raise ValueError("repository root must be the demo_repo directory")
 
     def _path(self, relative_path: str) -> Path:
-        candidate = (self.repo_root / relative_path).resolve()
+        relative = Path(relative_path)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("path traversal is not allowed")
+        candidate = (self.repo_root / relative).resolve()
         try:
             candidate.relative_to(self.repo_root)
         except ValueError as exc:
@@ -47,7 +50,7 @@ class RepositoryTools:
             matches.extend((rel, number, line) for number, line in enumerate(lines, 1) if text in line)
         return matches
 
-    def apply_patch(self, patch: str) -> None:
+    def _patched_content(self, patch: str) -> tuple[Path, str]:
         lines = patch.splitlines(keepends=True)
         if len(lines) < 3 or not lines[0].startswith("--- ") or not lines[1].startswith("+++ "):
             raise ValueError("expected a unified diff for one existing file")
@@ -59,24 +62,26 @@ class RepositoryTools:
         if old_name != new_name or old_name in ("/dev/null", ""):
             raise ValueError("patch must modify one existing file")
         path = self._path(old_name)
-        original = path.read_text(encoding="utf-8")
-        source = original.splitlines(keepends=True)
+        if not path.is_file():
+            raise FileNotFoundError(old_name)
+        source = path.read_text(encoding="utf-8").splitlines(keepends=True)
         output: list[str] = []
         cursor = 0
         i = 2
+        saw_hunk = False
         while i < len(lines):
             header = lines[i]
-            if not header.startswith("@@"):
-                raise ValueError("malformed unified diff")
-            match = re.match(r"@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@", header)
+            match = re.match(r"@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@", header)
             if not match:
-                raise ValueError("malformed hunk header")
+                raise ValueError("malformed unified diff hunk")
+            saw_hunk = True
             i += 1
             start = max(int(match.group(1)) - 1, 0)
-            if start < cursor:
-                raise ValueError("overlapping or unordered hunks")
+            if start < cursor or start > len(source):
+                raise ValueError("invalid or unordered hunk position")
             output.extend(source[cursor:start])
             cursor = start
+            old_count = new_count = 0
             while i < len(lines) and not lines[i].startswith("@@"):
                 row = lines[i]
                 i += 1
@@ -85,19 +90,30 @@ class RepositoryTools:
                 if not row or row[0] not in " +-":
                     raise ValueError("malformed patch line")
                 content = row[1:]
-                if row[0] == " ":
+                if row[0] in " -":
                     if cursor >= len(source) or source[cursor] != content:
                         raise ValueError("patch context does not match file")
-                    output.append(content)
                     cursor += 1
-                elif row[0] == "-":
-                    if cursor >= len(source) or source[cursor] != content:
-                        raise ValueError("patch content does not match file")
-                    cursor += 1
-                else:
+                    old_count += 1
+                if row[0] in " +":
                     output.append(content)
+                    new_count += 1
+            expected_old = int(match.group(2) or 1)
+            expected_new = int(match.group(4) or 1)
+            if (old_count, new_count) != (expected_old, expected_new):
+                raise ValueError("hunk line counts do not match its header")
+        if not saw_hunk:
+            raise ValueError("patch contains no hunks")
         output.extend(source[cursor:])
-        path.write_text("".join(output), encoding="utf-8")
+        return path, "".join(output)
+
+    def validate_patch(self, patch: str) -> None:
+        """Validate a patch against an existing demo_repo file without writing."""
+        self._patched_content(patch)
+
+    def apply_patch(self, patch: str) -> None:
+        path, content = self._patched_content(patch)
+        path.write_text(content, encoding="utf-8")
 
     def run_tests(self) -> subprocess.CompletedProcess[str]:
         """Run pytest only in demo_repo, with a fixed command and no shell."""

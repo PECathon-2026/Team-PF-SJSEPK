@@ -21,7 +21,7 @@ def _mission_path(mission_id: str, state_dir: str | Path | None) -> Path:
 def _validate(mission: dict[str, Any]) -> None:
     if mission.get("status") not in STATUSES:
         raise ValueError("invalid mission status")
-    if not isinstance(mission.get("retry_count"), int) or mission["retry_count"] < 0:
+    if isinstance(mission.get("retry_count"), bool) or not isinstance(mission.get("retry_count"), int) or mission["retry_count"] < 0:
         raise ValueError("retry_count must be a non-negative integer")
     if not isinstance(mission.get("tasks"), list):
         raise ValueError("tasks must be a list")
@@ -79,6 +79,8 @@ def update_mission(
     *,
     state_dir: str | Path | None = None,
 ) -> dict[str, Any]:
+    if not isinstance(updates, dict):
+        raise ValueError("updates must be a mapping")
     mission = load_mission(mission_id, state_dir=state_dir)
     if mission is None:
         raise FileNotFoundError(f"mission not found: {mission_id}")
@@ -94,3 +96,5 @@ def update_mission(
     })
     _write(_mission_path(mission_id, state_dir), mission)
     return mission
+
+

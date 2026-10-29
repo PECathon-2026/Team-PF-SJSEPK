@@ -1,0 +1,29 @@
+{
+  "mission_id": "716e65aa7612405ab9ace80b314ea019",
+  "user_request": "Add feature",
+  "tasks": [],
+  "status": "running",
+  "findings": [
+    "found issue"
+  ],
+  "test_results": {
+    "passed": 2
+  },
+  "retry_count": 1,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T15:55:12.195446+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T15:55:12.197025+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "retry_count",
+        "status",
+        "test_results"
+      ]
+    }
+  ]
+}

@@ -25,7 +25,7 @@ def test_apply_unified_diff(repo):
     assert (root / "sample.py").read_text(encoding="utf-8") == "answer = 42\n"
 
 
-@pytest.mark.parametrize("path", ["../outside.txt", "sub/../../outside.txt", "/outside.txt"])
+@pytest.mark.parametrize("path", ["../outside.txt", "sub/../../outside.txt", "sub/../sample.py", "/outside.txt"])
 def test_reject_escape_paths(repo, path):
     _, tools = repo
     with pytest.raises(ValueError):
