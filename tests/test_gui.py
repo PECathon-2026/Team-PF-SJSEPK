@@ -8,3 +8,4 @@ def test_streamlit_dashboard_renders_without_errors():
     assert not app.exception
     assert any(button.label == "Start Mission" for button in app.button)
     assert any(widget.label == "Mission request" for widget in app.text_area)
+    assert any("devpilot-hero" in item.value for item in app.markdown)

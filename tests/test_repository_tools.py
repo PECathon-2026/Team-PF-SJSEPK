@@ -19,6 +19,17 @@ def test_read_and_search(repo):
     assert tools.search("answer") == [("sample.py", 1, "answer = 41")]
 
 
+def test_search_ignores_repository_metadata_and_test_cache(repo):
+    root, tools = repo
+    cache = root / ".pytest_cache"
+    cache.mkdir()
+    (cache / "nodeids").write_text("answer = cached\n", encoding="utf-8")
+    metadata = root / ".git"
+    metadata.mkdir()
+    (metadata / "config").write_text("answer = metadata\n", encoding="utf-8")
+    assert tools.search("answer") == [("sample.py", 1, "answer = 41")]
+
+
 def test_apply_unified_diff(repo):
     root, tools = repo
     tools.apply_patch("--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n")

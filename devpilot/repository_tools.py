@@ -43,6 +43,8 @@ class RepositoryTools:
                 rel = resolved.relative_to(self.repo_root).as_posix()
             except ValueError:
                 continue
+            if any(part in {".git", ".pytest_cache", "__pycache__"} for part in Path(rel).parts):
+                continue
             try:
                 lines = resolved.read_text(encoding="utf-8").splitlines()
             except (UnicodeDecodeError, OSError):

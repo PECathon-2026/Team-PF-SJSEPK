@@ -159,14 +159,32 @@ def main() -> None:
     _initialise_state()
     st.markdown("""
     <style>
-    .stApp { background: radial-gradient(ellipse at top left, #182033 0, #0b0f17 48%); }
-    [data-testid="stMetric"] { background:#111827; border:1px solid #263246; padding:14px 16px; border-radius:12px; }
-    div[data-testid="stForm"] { background:#111827; border:1px solid #263246; padding:16px; border-radius:14px; }
-    h1 { letter-spacing:-0.04em; }
+    .stApp { background: #EDF1F8; color: #1F2A44; }
+    .block-container { max-width: 1160px; padding-top: 2.5rem; }
+    .devpilot-hero { padding: 1.55rem 1.8rem; border-radius: 24px; background: #EDF1F8;
+        box-shadow: 13px 13px 26px #CCD2DE, -13px -13px 26px #FFFFFF; margin-bottom: 1.5rem; }
+    .devpilot-kicker { color: #5B67D6; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
+    .devpilot-hero h1 { margin: .25rem 0; color: #1F2A44; font-size: 2.25rem; letter-spacing: -.04em; }
+    .devpilot-hero p { margin: 0; color: #65708A; }
+    [data-testid="stMetric"] { background:#EDF1F8; border:0; padding:14px 16px; border-radius:16px;
+        box-shadow:7px 7px 14px #CCD2DE, -7px -7px 14px #FFFFFF; }
+    div[data-testid="stForm"] { background:#EDF1F8; border:0; padding:20px; border-radius:20px;
+        box-shadow:inset 4px 4px 9px #D1D7E3, inset -4px -4px 9px #FFFFFF; }
+    .stTextArea textarea { background:#F6F8FC; border:0; border-radius:12px;
+        box-shadow:inset 3px 3px 6px #D6DCE7, inset -3px -3px 6px #FFFFFF; }
+    .stButton > button, .stFormSubmitButton > button { border:0; border-radius:12px; font-weight:650;
+        box-shadow:5px 5px 10px #CCD2DE, -5px -5px 10px #FFFFFF; }
+    .stExpander { background:#EDF1F8; border:0; border-radius:16px;
+        box-shadow:6px 6px 12px #D0D6E2, -6px -6px 12px #FFFFFF; }
     </style>
     """, unsafe_allow_html=True)
-    st.title("◈ DevPilot")
-    st.caption("Approval-gated coding missions · repository access is limited to demo_repo/")
+    st.markdown("""
+    <section class="devpilot-hero">
+      <div class="devpilot-kicker">PECATHON · PS-001</div>
+      <h1>◈ DevPilot</h1>
+      <p>Approval-gated coding missions · repository access stays inside demo_repo/</p>
+    </section>
+    """, unsafe_allow_html=True)
     if st.session_state.dp_mission_id:
         st.caption(f"Mission ID: {st.session_state.dp_mission_id}")
 

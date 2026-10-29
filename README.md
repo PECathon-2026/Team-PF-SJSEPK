@@ -11,9 +11,10 @@ DevPilot is a multi-agent AI software engineering system for PECathon PS-001.
 
 ## Setup and live demo
 
-Install the existing project dependencies and run the full suite:
+Create the Windows virtual environment, install dependencies, and run the full suite:
 
 ```powershell
+py -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 .\.venv\Scripts\python.exe -m pytest -q tests
 ```
@@ -60,4 +61,4 @@ Install dependencies and launch the dashboard from the project root:
 .\.venv\Scripts\python.exe -m streamlit run devpilot/gui.py
 ```
 
-Enter a mission and select **Start Mission**. The dashboard polls persisted mission state, accepts unified diffs, and routes task and patch approval or rejection through the existing orchestrator. Repository reads, patch validation, application, test scope, and retry bounds remain enforced by the backend.
+Enter a mission and select **Start Mission**. The light dashboard polls persisted mission state, accepts unified diffs, and routes task and patch approval or rejection through the existing orchestrator. Repository reads, patch validation, application, test scope, and retry bounds remain enforced by the backend.
