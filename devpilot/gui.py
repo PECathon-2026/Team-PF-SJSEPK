@@ -1,6 +1,7 @@
 ﻿"""Streamlit dashboard for the DevPilot mission workflow."""
 from __future__ import annotations
 
+from html import escape
 from queue import Empty, Queue
 import threading
 from typing import Any
@@ -88,9 +89,12 @@ def _render_interaction(interaction: Interaction) -> None:
 
 def _render_mission(mission: dict[str, Any]) -> None:
     stages = mission_stages(mission)
-    columns = st.columns(len(stages))
-    for column, (label, value) in zip(columns, stages.items()):
-        column.metric(label, value)
+    cards = "".join(
+        f'<article class="devpilot-stage-card"><span>{escape(label)}</span>'
+        f'<strong>{escape(value)}</strong></article>'
+        for label, value in stages.items()
+    )
+    st.markdown(f'<section class="devpilot-stage-grid">{cards}</section>', unsafe_allow_html=True)
 
     proposals = [item for item in mission.get("findings", []) if item.get("type") == "patch_proposal"]
     if proposals:
@@ -135,7 +139,7 @@ def _render_mission(mission: dict[str, Any]) -> None:
             st.markdown(f"`{entry.get('event', 'event')}`" + (f" — {details}" if details else ""))
 
 
-@st.fragment(run_every="1s")
+@st.fragment(run_every=1)
 def _live_panel() -> None:
     events: Queue | None = st.session_state.dp_events
     if events is not None:
@@ -185,8 +189,13 @@ def main() -> None:
     .devpilot-kicker { color: #5B67D6; font-size: .75rem; font-weight: 700; letter-spacing: .12em; }
     .devpilot-hero h1 { margin: .25rem 0; color: #1F2A44; font-size: 2.25rem; letter-spacing: -.04em; }
     .devpilot-hero p { margin: 0; color: #65708A; }
-    [data-testid="stMetric"] { background:#EDF1F8; border:0; padding:14px 16px; border-radius:16px;
-        box-shadow:7px 7px 14px #CCD2DE, -7px -7px 14px #FFFFFF; }
+    .devpilot-stage-grid { display:grid; grid-template-columns:repeat(5, minmax(0, 1fr));
+        gap:14px; margin:0 0 1rem; }
+    .devpilot-stage-card { display:flex; flex-direction:column; gap:7px; padding:14px 16px;
+        border-radius:16px; background:#EDF1F8; box-shadow:7px 7px 14px #CCD2DE, -7px -7px 14px #FFFFFF; }
+    .devpilot-stage-card span { color:#65708A; font-size:.8rem; }
+    .devpilot-stage-card strong { color:#1F2A44; font-size:1.15rem; overflow-wrap:anywhere; }
+    @media (max-width: 760px) { .devpilot-stage-grid { grid-template-columns:repeat(2, minmax(0, 1fr)); } }
     div[data-testid="stForm"] { background:#EDF1F8; border:0; padding:20px; border-radius:20px;
         box-shadow:inset 4px 4px 9px #D1D7E3, inset -4px -4px 9px #FFFFFF; }
     .stTextArea textarea { background:#F6F8FC; border:0; border-radius:12px;
