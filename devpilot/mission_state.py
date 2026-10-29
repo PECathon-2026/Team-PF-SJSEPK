@@ -3,7 +3,10 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
+import tempfile
+import time
 from typing import Any
 from uuid import uuid4
 
@@ -31,9 +34,41 @@ def _validate(mission: dict[str, Any]) -> None:
 
 def _write(path: Path, mission: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(".tmp")
-    temporary.write_text(json.dumps(mission, indent=2) + "\n", encoding="utf-8")
-    temporary.replace(path)
+    temporary: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.stem}.",
+            suffix=".tmp",
+            delete=False,
+        ) as file:
+            temporary = Path(file.name)
+            file.write(json.dumps(mission, indent=2) + "\n")
+            file.flush()
+            os.fsync(file.fileno())
+
+        for attempt, delay in enumerate((0, 0.05, 0.1, 0.2, 0.4), start=1):
+            if delay:
+                time.sleep(delay)
+            try:
+                os.replace(temporary, path)
+                temporary = None
+                break
+            except PermissionError as exc:
+                if attempt == 5:
+                    raise PermissionError(
+                        f"Unable to save mission state to {path}. The file or its "
+                        "directory is locked or write-protected; close other "
+                        "processes using this mission and check folder permissions."
+                    ) from exc
+    finally:
+        if temporary is not None:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
 
 
 def create_mission(
@@ -96,5 +131,4 @@ def update_mission(
     })
     _write(_mission_path(mission_id, state_dir), mission)
     return mission
-
 

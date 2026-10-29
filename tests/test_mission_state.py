@@ -1,7 +1,9 @@
 ﻿import json
+import os
 
 import pytest
 
+from devpilot import mission_state
 from devpilot.mission_state import STATUSES, create_mission, load_mission, update_mission
 
 
@@ -30,6 +32,38 @@ def test_update_and_log_activity(tmp_path):
     assert updated["test_results"] == {"passed": 2}
     assert updated["retry_count"] == 1
     assert updated["activity_log"][-1]["fields"] == ["findings", "retry_count", "status", "test_results"]
+
+
+def test_state_write_retries_transient_windows_replace_lock(tmp_path, monkeypatch):
+    mission = create_mission("Request", state_dir=tmp_path)
+    original_replace = os.replace
+    attempts = 0
+
+    def replace_with_transient_lock(source, destination):
+        nonlocal attempts
+        attempts += 1
+        if attempts == 1:
+            raise PermissionError("file is briefly locked")
+        original_replace(source, destination)
+
+    monkeypatch.setattr(mission_state.os, "replace", replace_with_transient_lock)
+    updated = update_mission(mission["mission_id"], {"status": "running"}, state_dir=tmp_path)
+    assert attempts == 2
+    assert load_mission(mission["mission_id"], state_dir=tmp_path) == updated
+    assert list(tmp_path.glob("*.tmp")) == []
+
+
+def test_persistent_state_write_lock_preserves_previous_mission(tmp_path, monkeypatch):
+    mission = create_mission("Request", state_dir=tmp_path)
+
+    def deny_replace(_source, _destination):
+        raise PermissionError("access denied")
+
+    monkeypatch.setattr(mission_state.os, "replace", deny_replace)
+    with pytest.raises(PermissionError, match="check folder permissions"):
+        update_mission(mission["mission_id"], {"status": "running"}, state_dir=tmp_path)
+    assert load_mission(mission["mission_id"], state_dir=tmp_path) == mission
+    assert list(tmp_path.glob("*.tmp")) == []
 
 
 def test_missing_and_corrupt_state_are_safe(tmp_path):
