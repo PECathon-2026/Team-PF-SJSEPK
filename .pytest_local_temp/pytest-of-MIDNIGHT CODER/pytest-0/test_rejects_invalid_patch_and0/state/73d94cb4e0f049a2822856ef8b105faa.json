@@ -1,0 +1,65 @@
+{
+  "mission_id": "73d94cb4e0f049a2822856ef8b105faa",
+  "user_request": "Change answer",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "relevant_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "e15ee008c9244159a1fd10384a58768c",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 0\n+answer = 42\n",
+      "status": "rejected",
+      "outcome": "patch context does not match file"
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "d934719fae264b50b1043a328c3f0297",
+      "task_id": "task-1",
+      "patch": "--- a/../outside.py\n+++ b/../outside.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n",
+      "status": "rejected",
+      "outcome": "path traversal is not allowed"
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:30.554838+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:30.558066+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:30.560460+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:30.562386+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    }
+  ]
+}

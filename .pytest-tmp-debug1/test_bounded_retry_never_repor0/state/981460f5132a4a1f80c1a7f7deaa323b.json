@@ -1,0 +1,527 @@
+{
+  "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+  "user_request": "Set answer to 42",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Set answer to 42",
+      "acceptance_criteria": [
+        "Verify that: Set answer to 42"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "status": "failed",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Set answer to 42",
+      "acceptance_criteria": [
+        "Verify that: Set answer to 42"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 1 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "cfb6b6f5826d42e4b265d771183f4d86",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "cfb6b6f5826d42e4b265d771183f4d86",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Set answer to 42",
+          "status": "addressed",
+          "matched_terms": [
+            "answer"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py"
+      ]
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "171c24a113de4cab8d3f64869076bafe",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 42\n+answer = 43\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "171c24a113de4cab8d3f64869076bafe",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Set answer to 42",
+          "status": "addressed",
+          "matched_terms": [
+            "answer"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "test_results": [
+    {
+      "task_id": "task-1",
+      "attempt": 1,
+      "command": [
+        "E:\\Tsukuyomi Watch\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--noconftest",
+        "-p",
+        "no:cacheprovider",
+        "-c",
+        "pytest.ini",
+        "E:\\Tsukuyomi Watch\\.pytest-tmp-debug1\\test_bounded_retry_never_repor0\\demo_repo"
+      ],
+      "returncode": 1,
+      "passed": false,
+      "stdout": "failed",
+      "stderr": ""
+    },
+    {
+      "task_id": "task-1",
+      "attempt": 2,
+      "command": [
+        "E:\\Tsukuyomi Watch\\.venv\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--noconftest",
+        "-p",
+        "no:cacheprovider",
+        "-c",
+        "pytest.ini",
+        "E:\\Tsukuyomi Watch\\.pytest-tmp-debug1\\test_bounded_retry_never_repor0\\demo_repo"
+      ],
+      "returncode": 1,
+      "passed": false,
+      "stdout": "failed",
+      "stderr": ""
+    }
+  ],
+  "retry_count": 1,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:38.196452+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.197677+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.199415+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 1 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.202356+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.203849+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.206382+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.211978+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.214343+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.216717+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "proposal_id": "cfb6b6f5826d42e4b265d771183f4d86",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.222118+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.226296+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "proposal_id": "cfb6b6f5826d42e4b265d771183f4d86"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.228365+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "review_started",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.230057+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.233536+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 1,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.237477+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.239545+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.241039+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "test_results"
+      ]
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 1,
+      "passed": false,
+      "returncode": 1,
+      "timed_out": false
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.242775+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 1,
+      "tests_passed": false,
+      "review_status": "pass"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.244438+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.246111+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "retry_count"
+      ]
+    },
+    {
+      "event": "retry_started",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "retry": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.247982+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.250158+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "proposal_id": "171c24a113de4cab8d3f64869076bafe",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.252285+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.255825+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "proposal_id": "171c24a113de4cab8d3f64869076bafe"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.258256+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "review_started",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.261408+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.264347+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 2,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.266429+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.269195+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.271236+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "test_results"
+      ]
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 2,
+      "passed": false,
+      "returncode": 1,
+      "timed_out": false
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.273414+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "task_id": "task-1",
+      "attempt": 2,
+      "tests_passed": false,
+      "review_status": "pass"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.275234+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.276637+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "mission_finished",
+      "mission_id": "981460f5132a4a1f80c1a7f7deaa323b",
+      "status": "failed"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.278433+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

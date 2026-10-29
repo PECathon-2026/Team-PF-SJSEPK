@@ -1,0 +1,22 @@
+{
+  "mission_id": "6656e4095d7f4939b2769e95fb4edbd3",
+  "user_request": "Request",
+  "tasks": [],
+  "status": "cancelled",
+  "findings": [],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:37.873541+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.876951+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    }
+  ]
+}

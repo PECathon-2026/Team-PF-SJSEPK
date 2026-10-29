@@ -1,0 +1,40 @@
+{
+  "mission_id": "503c84b9000946c698745f8cbf8c4452",
+  "user_request": "Set answer to 42",
+  "tasks": [],
+  "status": "cancelled",
+  "findings": [],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:33.257033+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.258699+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.259913+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "mission_cancelled",
+      "mission_id": "503c84b9000946c698745f8cbf8c4452"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.261784+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

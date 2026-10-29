@@ -1,0 +1,147 @@
+{
+  "mission_id": "59b783ad28c84447b0fab809900719a6",
+  "user_request": "Update value",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Update value",
+      "acceptance_criteria": [
+        "Verify that: Update value"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "status": "cancelled",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Update value",
+      "acceptance_criteria": [
+        "Verify that: Update value"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 1 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    }
+  ],
+  "test_results": [],
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:37.723977+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.726486+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "59b783ad28c84447b0fab809900719a6",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.729302+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "59b783ad28c84447b0fab809900719a6",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 1 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.732740+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "59b783ad28c84447b0fab809900719a6",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.735260+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.737603+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "59b783ad28c84447b0fab809900719a6",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.740301+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.846886+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "approval_denied",
+      "mission_id": "59b783ad28c84447b0fab809900719a6",
+      "stage": "task",
+      "task_id": "task-1"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:37.851577+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

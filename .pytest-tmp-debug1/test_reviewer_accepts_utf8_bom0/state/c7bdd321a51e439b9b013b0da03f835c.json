@@ -1,0 +1,96 @@
+{
+  "mission_id": "c7bdd321a51e439b9b013b0da03f835c",
+  "user_request": "Set answer",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Set answer to 42",
+      "acceptance_criteria": [
+        "answer is 42"
+      ],
+      "relevant_files": [
+        "sample.py",
+        "bom_module.py"
+      ]
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "3b1a5e74861b49a0b8b56ce5557d3eff",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "3b1a5e74861b49a0b8b56ce5557d3eff",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "answer is 42",
+          "status": "addressed",
+          "matched_terms": [
+            "answer"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py",
+        "bom_module.py"
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:40.126912+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.129407+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.131674+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "tasks"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.133451+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.138923+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.143100+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    }
+  ]
+}

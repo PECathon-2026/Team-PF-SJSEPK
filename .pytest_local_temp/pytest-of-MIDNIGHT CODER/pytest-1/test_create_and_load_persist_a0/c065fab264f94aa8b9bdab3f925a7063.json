@@ -1,0 +1,17 @@
+{
+  "mission_id": "c065fab264f94aa8b9bdab3f925a7063",
+  "user_request": "Fix bug",
+  "tasks": [
+    "inspect"
+  ],
+  "status": "pending",
+  "findings": [],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:53.764433+00:00",
+      "event": "mission_created"
+    }
+  ]
+}

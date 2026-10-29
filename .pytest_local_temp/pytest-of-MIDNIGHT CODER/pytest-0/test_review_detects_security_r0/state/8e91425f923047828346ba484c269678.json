@@ -1,0 +1,94 @@
+{
+  "mission_id": "8e91425f923047828346ba484c269678",
+  "user_request": "Set answer",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Set answer to 42",
+      "acceptance_criteria": [
+        "answer is 42"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "b7aa1cf5f73648b5bb49fa9fff98474f",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = eval(input())\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "b7aa1cf5f73648b5bb49fa9fff98474f",
+      "status": "fail",
+      "criteria": [
+        {
+          "criterion": "answer is 42",
+          "status": "addressed",
+          "matched_terms": [
+            "answer"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "category": "security",
+          "code": "dynamic_eval",
+          "severity": "high",
+          "message": "Dynamic eval can execute untrusted input."
+        }
+      ],
+      "reviewed_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:34.337586+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.339643+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.341477+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.343294+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.344818+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    }
+  ]
+}

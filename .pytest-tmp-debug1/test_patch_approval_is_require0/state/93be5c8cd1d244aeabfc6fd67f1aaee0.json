@@ -1,0 +1,188 @@
+{
+  "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+  "user_request": "Set answer to 42",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Set answer to 42",
+      "acceptance_criteria": [
+        "Verify that: Set answer to 42"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ]
+    }
+  ],
+  "status": "cancelled",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Set answer to 42",
+      "acceptance_criteria": [
+        "Verify that: Set answer to 42"
+      ],
+      "relevant_files": [
+        "sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 1 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "5a2846070f1b437da0e8bb01ae15b4c5",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n",
+      "status": "proposed"
+    }
+  ],
+  "test_results": [],
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:38.371996+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.374065+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.376201+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 1 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.380547+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.382142+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.383616+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.387059+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.391490+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.397066+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "task_id": "task-1",
+      "proposal_id": "5a2846070f1b437da0e8bb01ae15b4c5",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.399845+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.401662+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "approval_denied",
+      "mission_id": "93be5c8cd1d244aeabfc6fd67f1aaee0",
+      "stage": "patch",
+      "task_id": "task-1",
+      "proposal_id": "5a2846070f1b437da0e8bb01ae15b4c5"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:38.404166+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

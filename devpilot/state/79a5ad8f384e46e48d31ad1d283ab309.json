@@ -1,0 +1,152 @@
+{
+  "mission_id": "79a5ad8f384e46e48d31ad1d283ab309",
+  "user_request": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers. Add tests for normal inputs and zero. Run the tests, review the change, and report verified results.",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers.",
+      "acceptance_criteria": [
+        "Verify that: In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers."
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ]
+    },
+    {
+      "task_id": "task-2",
+      "description": "Add tests for normal inputs and zero.",
+      "acceptance_criteria": [
+        "Verify that: Add tests for normal inputs and zero."
+      ],
+      "relevant_files": [
+        "TASK.md"
+      ]
+    },
+    {
+      "task_id": "task-3",
+      "description": "Run the tests, review the change, and report verified results.",
+      "acceptance_criteria": [
+        "Verify that: Run the tests, review the change, and report verified results."
+      ],
+      "relevant_files": [
+        "TASK.md"
+      ]
+    }
+  ],
+  "status": "running",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers. Add tests for normal inputs and zero. Run the tests, review the change, and report verified results.",
+      "acceptance_criteria": [
+        "Verify that: In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers.",
+        "Verify that: Add tests for normal inputs and zero.",
+        "Verify that: Run the tests, review the change, and report verified results."
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 3 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 3 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 3 acceptance criterion/criteria"
+        }
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:17:29.210900+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.230031+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "79a5ad8f384e46e48d31ad1d283ab309",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 3 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.250231+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "79a5ad8f384e46e48d31ad1d283ab309",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.479596+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "79a5ad8f384e46e48d31ad1d283ab309",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 3 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.485778+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.492146+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "79a5ad8f384e46e48d31ad1d283ab309",
+      "task_count": 3
+    },
+    {
+      "timestamp": "2026-10-29T18:17:29.497801+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

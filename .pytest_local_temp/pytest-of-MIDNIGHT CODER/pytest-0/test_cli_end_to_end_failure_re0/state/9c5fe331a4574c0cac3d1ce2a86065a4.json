@@ -1,0 +1,532 @@
+{
+  "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+  "user_request": "Add a greet(name) function to sample.py that returns a personalized greeting.",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Add a greet(name) function to sample.py that returns a personalized greeting.",
+      "acceptance_criteria": [
+        "Verify that: Add a greet(name) function to sample.py that returns a personalized greeting."
+      ],
+      "relevant_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "status": "completed",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Add a greet(name) function to sample.py that returns a personalized greeting.",
+      "acceptance_criteria": [
+        "Verify that: Add a greet(name) function to sample.py that returns a personalized greeting."
+      ],
+      "relevant_files": [
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 2 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "79cd0d67ff094e56a3df624daf426c82",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1,2 +1,5 @@\n # sample demo repository file\n message = \"hello from demo_repo\"\n+\n+def greet(name):\n+    return f\"Hi, {name}!\"\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "79cd0d67ff094e56a3df624daf426c82",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Add a greet(name) function to sample.py that returns a personalized greeting.",
+          "status": "addressed",
+          "matched_terms": [
+            "greet",
+            "name"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "d300bb0525e94ea584a3b37b441dd40b",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -5 +5 @@\n-    return f\"Hi, {name}!\"\n+    return f\"Hello, {name}!\"\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "d300bb0525e94ea584a3b37b441dd40b",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Add a greet(name) function to sample.py that returns a personalized greeting.",
+          "status": "addressed",
+          "matched_terms": [
+            "name"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "test_results": [
+    {
+      "task_id": "task-1",
+      "attempt": 1,
+      "command": [
+        "C:\\Users\\MY ASUS\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--noconftest",
+        "-p",
+        "no:cacheprovider",
+        "-c",
+        "E:\\Tsukuyomi Watch\\.pytest_local_temp\\devpilot-pytest-9dc3xwo6\\pytest.ini",
+        "E:\\Tsukuyomi Watch\\.pytest_local_temp\\pytest-of-MIDNIGHT CODER\\pytest-0\\test_cli_end_to_end_failure_re0\\demo_repo"
+      ],
+      "returncode": 1,
+      "passed": false,
+      "stdout": ".F                                                                       [100%]\n================================== FAILURES ===================================\n________________________________ test_greeting ________________________________\n\n    def test_greeting():\n>       assert sample.greet(\"Ada\") == \"Hello, Ada!\"\nE       AssertionError: assert 'Hi, Ada!' == 'Hello, Ada!'\nE         \nE         - Hello, Ada!\nE         + Hi, Ada!\n\ntest_sample.py:7: AssertionError\n=========================== short test summary info ===========================\nFAILED ..\\..\\..\\..\\devpilot-pytest-9dc3xwo6\\test_sample.py::test_greeting - A...\n1 failed, 1 passed in 0.07s\n",
+      "stderr": ""
+    },
+    {
+      "task_id": "task-1",
+      "attempt": 2,
+      "command": [
+        "C:\\Users\\MY ASUS\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe",
+        "-m",
+        "pytest",
+        "-q",
+        "--noconftest",
+        "-p",
+        "no:cacheprovider",
+        "-c",
+        "E:\\Tsukuyomi Watch\\.pytest_local_temp\\devpilot-pytest-d1n2cvt0\\pytest.ini",
+        "E:\\Tsukuyomi Watch\\.pytest_local_temp\\pytest-of-MIDNIGHT CODER\\pytest-0\\test_cli_end_to_end_failure_re0\\demo_repo"
+      ],
+      "returncode": 0,
+      "passed": true,
+      "stdout": "..                                                                       [100%]\n2 passed in 0.01s\n",
+      "stderr": ""
+    }
+  ],
+  "retry_count": 1,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:33.335706+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.337261+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.338757+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 2 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.346594+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.349221+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.350769+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.352140+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.353865+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.355387+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "proposal_id": "79cd0d67ff094e56a3df624daf426c82",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.356667+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.358666+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "proposal_id": "79cd0d67ff094e56a3df624daf426c82"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.360226+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "review_started",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.361907+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.365819+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 1,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.368134+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.369672+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.866185+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "test_results"
+      ]
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 1,
+      "passed": false,
+      "returncode": 1,
+      "timed_out": false
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.868151+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 1,
+      "tests_passed": false,
+      "review_status": "pass"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.870253+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.871712+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "retry_count"
+      ]
+    },
+    {
+      "event": "retry_started",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "retry": 1
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.873241+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.875029+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "proposal_id": "d300bb0525e94ea584a3b37b441dd40b",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.876359+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.878982+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "proposal_id": "d300bb0525e94ea584a3b37b441dd40b"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.882940+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "review_started",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.885244+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.887936+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 2,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.889355+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "timestamp": "2026-10-29T19:17:33.891374+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.257541+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "test_results"
+      ]
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 2,
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.259620+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "task_id": "task-1",
+      "attempt": 2,
+      "tests_passed": true,
+      "review_status": "pass"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.262717+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.265697+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "mission_finished",
+      "mission_id": "9c5fe331a4574c0cac3d1ce2a86065a4",
+      "status": "completed"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:34.268209+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

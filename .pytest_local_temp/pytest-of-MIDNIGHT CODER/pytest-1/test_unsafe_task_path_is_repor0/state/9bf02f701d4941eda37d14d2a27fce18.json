@@ -1,0 +1,102 @@
+{
+  "mission_id": "9bf02f701d4941eda37d14d2a27fce18",
+  "user_request": "Set answer",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Set answer to 42",
+      "acceptance_criteria": [
+        "answer is 42"
+      ],
+      "relevant_files": [
+        "../outside.py"
+      ]
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "d2e339d5961a41bca4a7fdb77526fac0",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "d2e339d5961a41bca4a7fdb77526fac0",
+      "status": "fail",
+      "criteria": [
+        {
+          "criterion": "answer is 42",
+          "status": "addressed",
+          "matched_terms": [
+            "answer"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "category": "security",
+          "code": "unsafe_path",
+          "severity": "high",
+          "message": "Rejected unsafe repository path '../outside.py': path traversal is not allowed"
+        }
+      ],
+      "reviewed_files": [
+        "../outside.py",
+        "sample.py"
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:56.088125+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:56.090511+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:56.092920+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:56.097083+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:56.098890+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "tasks"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T19:17:56.100395+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    }
+  ]
+}

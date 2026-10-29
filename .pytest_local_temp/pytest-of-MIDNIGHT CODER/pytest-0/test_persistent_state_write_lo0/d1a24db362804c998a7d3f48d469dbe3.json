@@ -1,0 +1,15 @@
+{
+  "mission_id": "d1a24db362804c998a7d3f48d469dbe3",
+  "user_request": "Request",
+  "tasks": [],
+  "status": "pending",
+  "findings": [],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:32.208237+00:00",
+      "event": "mission_created"
+    }
+  ]
+}

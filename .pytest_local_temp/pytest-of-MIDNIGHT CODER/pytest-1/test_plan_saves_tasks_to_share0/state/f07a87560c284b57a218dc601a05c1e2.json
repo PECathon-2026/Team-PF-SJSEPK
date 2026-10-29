@@ -1,0 +1,61 @@
+{
+  "mission_id": "f07a87560c284b57a218dc601a05c1e2",
+  "user_request": "Update login",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Update login",
+      "acceptance_criteria": [
+        "Verify that: Update login"
+      ],
+      "relevant_files": []
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Update login",
+      "acceptance_criteria": [
+        "Verify that: Update login"
+      ],
+      "relevant_files": [],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 0 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T19:17:55.997499+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T19:17:55.999781+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    }
+  ]
+}

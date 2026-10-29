@@ -1,0 +1,249 @@
+{
+  "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+  "user_request": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers. Add tests for normal inputs and zero. Run the tests, review the change, and report verified results.",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers.",
+      "acceptance_criteria": [
+        "Verify that: In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers."
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ]
+    },
+    {
+      "task_id": "task-2",
+      "description": "Add tests for normal inputs and zero.",
+      "acceptance_criteria": [
+        "Verify that: Add tests for normal inputs and zero."
+      ],
+      "relevant_files": [
+        "TASK.md"
+      ]
+    },
+    {
+      "task_id": "task-3",
+      "description": "Run the tests, review the change, and report verified results.",
+      "acceptance_criteria": [
+        "Verify that: Run the tests, review the change, and report verified results."
+      ],
+      "relevant_files": [
+        "TASK.md"
+      ]
+    }
+  ],
+  "status": "failed",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers. Add tests for normal inputs and zero. Run the tests, review the change, and report verified results.",
+      "acceptance_criteria": [
+        "Verify that: In demo_repo/sample.py, add a function named multiply(a, b) that returns the product of two numbers.",
+        "Verify that: Add tests for normal inputs and zero.",
+        "Verify that: Run the tests, review the change, and report verified results."
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 3 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 3 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 3 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "bc6fb5c10edf47189697b9934aa232a1",
+      "task_id": "task-1",
+      "patch": "Fix the DevPilot GUI workflow. The mission gets stuck at Developer: Accepted because the GUI asks the user to manually paste a unified diff. Make the Developer Agent generate the patch automatically from the current task and display it in the approval box. Keep human approval before applying changes. After approval, run tests, perform independent review/security checks, and record actual results in mission state. Preserve safe repository restrictions. Add tests for the workflow and fix any blockers.\n",
+      "status": "rejected",
+      "outcome": "expected a unified diff for one existing file"
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "0dd7a09ee5574f629ae9854f256d1c1b",
+      "task_id": "task-1",
+      "patch": "--- a/demo_repo/sample.py\n+++ b/demo_repo/sample.py\n@@ -0,0 +1,2 @@\n+def multiply(a, b):\n+    return a * b",
+      "status": "rejected",
+      "outcome": "demo_repo/sample.py"
+    }
+  ],
+  "test_results": [],
+  "retry_count": 1,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:25:47.240233+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.377208+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 3 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.389971+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.627368+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 3 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.637273+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.646737+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "task_count": 3
+    },
+    {
+      "timestamp": "2026-10-29T18:25:47.653526+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:26:53.276527+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:28:32.837531+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_rejected",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "task_id": "task-1",
+      "attempt": 1,
+      "reason": "expected a unified diff for one existing file"
+    },
+    {
+      "timestamp": "2026-10-29T18:28:32.854800+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:28:32.973468+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "retry_count"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:29:38.269686+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_rejected",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "task_id": "task-1",
+      "attempt": 2,
+      "reason": "demo_repo/sample.py"
+    },
+    {
+      "timestamp": "2026-10-29T18:29:38.373491+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:29:38.381974+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "mission_finished",
+      "mission_id": "68cc8faf5f494f00a978764ed19300d6",
+      "status": "failed"
+    },
+    {
+      "timestamp": "2026-10-29T18:29:38.387778+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

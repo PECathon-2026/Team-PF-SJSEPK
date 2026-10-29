@@ -1,0 +1,64 @@
+{
+  "mission_id": "5013c28a3ceb4c8c8d2bdfeab9514bb1",
+  "user_request": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+  "tasks": [],
+  "status": "running",
+  "findings": [],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:50:56.138130+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:50:56.151065+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5013c28a3ceb4c8c8d2bdfeab9514bb1",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:50:56.232214+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5013c28a3ceb4c8c8d2bdfeab9514bb1",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T18:50:56.327252+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5013c28a3ceb4c8c8d2bdfeab9514bb1",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T18:50:56.334857+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

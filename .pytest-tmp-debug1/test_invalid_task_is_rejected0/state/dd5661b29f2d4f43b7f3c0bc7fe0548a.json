@@ -1,0 +1,41 @@
+{
+  "mission_id": "dd5661b29f2d4f43b7f3c0bc7fe0548a",
+  "user_request": "Set answer",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "acceptance_criteria": [],
+      "relevant_files": []
+    }
+  ],
+  "status": "pending",
+  "findings": [
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    }
+  ],
+  "test_results": null,
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T18:11:40.148990+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.152391+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T18:11:40.154610+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "tasks"
+      ]
+    }
+  ]
+}
