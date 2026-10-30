@@ -53,6 +53,43 @@ def test_gui_bridge_routes_patch_and_approval_through_orchestrator(tmp_path):
     assert stages == {"Planner": "Planned", "Developer": "Applied", "Reviewer": "Pass", "Tests": "Passed", "Mission": "completed"}
 
 
+def test_gui_llm_mode_still_requires_task_and_patch_approval(tmp_path, monkeypatch):
+    root = tmp_path / "demo_repo"
+    root.mkdir()
+    (root / "sample.py").write_text(
+        '# sample demo repository file\nmessage = "hello from demo_repo"\n',
+        encoding="utf-8",
+    )
+    (root / "test_sample.py").write_text(
+        "import sample\n\ndef test_value():\n    assert sample.value == 7\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr("devpilot.gui_bridge.generate_patch", lambda *_args, **_kwargs: PATCH)
+    events = Queue()
+    thread = threading.Thread(
+        target=run_mission_worker,
+        args=("Add value to sample.py", events),
+        kwargs={
+            "repository": RepositoryTools(root),
+            "state_dir": tmp_path / "state",
+            "use_llm": True,
+        },
+        daemon=True,
+    )
+    thread.start()
+
+    def approve(interaction):
+        assert interaction.kind == "approval"
+        assert interaction.details["stage"] in {"task", "patch"}
+        return True
+
+    result = _run_to_result(events, approve)
+    thread.join(timeout=10)
+    assert result["kind"] == "result"
+    assert result["mission"]["status"] == "completed"
+    assert result["mission"]["test_results"][0]["passed"] is True
+
+
 def test_gui_rejection_uses_existing_approval_and_leaves_code_unchanged(tmp_path):
     root = tmp_path / "demo_repo"
     root.mkdir()
@@ -78,6 +115,26 @@ def test_gui_rejection_uses_existing_approval_and_leaves_code_unchanged(tmp_path
     assert result["mission"]["status"] == "cancelled"
     assert source.read_text(encoding="utf-8") == '# sample demo repository file\nmessage = "hello from demo_repo"\n'
     assert mission_stages(result["mission"])["Mission"] == "cancelled"
+
+
+def test_cancelled_mission_marks_all_agent_stages_cancelled():
+    assert mission_stages(
+        {
+            "status": "cancelled",
+            "findings": [
+                {"type": "plan"},
+                {"type": "patch_proposal", "status": "proposed"},
+            ],
+            "tasks": [{"task_id": "task-1"}],
+            "test_results": [],
+        }
+    ) == {
+        "Planner": "Cancelled",
+        "Developer": "Cancelled",
+        "Reviewer": "Cancelled",
+        "Tests": "Cancelled",
+        "Mission": "cancelled",
+    }
 
 
 def test_gui_cancellation_releases_pending_approval(tmp_path):

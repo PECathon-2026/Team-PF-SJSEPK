@@ -55,6 +55,21 @@ class PlannerAgent:
         self.repository_scout = RepositoryScoutAgent(self.repository)
         self.acceptance_analyst = AcceptanceCriteriaAgent()
 
+    @staticmethod
+    def clarification_question(user_request: str) -> str | None:
+        vague_requests = {
+            "fix it",
+            "make it better",
+            "improve it",
+            "update it",
+            "change it",
+            "do something",
+        }
+        normalized = " ".join(user_request.casefold().strip().rstrip(".!?").split())
+        if len(normalized) < 8 or normalized in vague_requests:
+            return "What specific behavior should change, and how should we verify that it is correct?"
+        return None
+
     def create_plan(
         self,
         user_request: str,

@@ -1,8 +1,9 @@
-﻿"""Small, demo_repo-scoped repository operations."""
+"""Repository operations confined to an explicitly selected root."""
 from __future__ import annotations
 
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -13,8 +14,8 @@ class RepositoryTools:
     def __init__(self, repo_root: str | Path | None = None):
         default_root = Path(__file__).resolve().parent.parent / "demo_repo"
         self.repo_root = Path(repo_root or default_root).resolve()
-        if self.repo_root.name.casefold() != "demo_repo" or not self.repo_root.is_dir():
-            raise ValueError("repository root must be the demo_repo directory")
+        if not self.repo_root.is_dir():
+            raise ValueError("repository root must be an existing directory")
 
     def _path(self, relative_path: str) -> Path:
         relative = Path(relative_path)
@@ -24,7 +25,7 @@ class RepositoryTools:
         try:
             candidate.relative_to(self.repo_root)
         except ValueError as exc:
-            raise ValueError("path must stay inside demo_repo") from exc
+            raise ValueError("path must stay inside the selected repository root") from exc
         if candidate == self.repo_root:
             raise ValueError("a file path is required")
         return candidate
@@ -47,7 +48,27 @@ class RepositoryTools:
                 rel = resolved.relative_to(self.repo_root).as_posix()
             except ValueError:
                 continue
-            if any(part in {".git", ".pytest_cache", "__pycache__"} for part in Path(rel).parts):
+            if any(
+                part in {
+                    ".git",
+                    ".pytest_cache",
+                    ".pytest_local_temp",
+                    ".pytest-tmp-debug1",
+                    "__pycache__",
+                    ".venv",
+                    "venv",
+                    ".devpilot-pytest-temp",
+                }
+                for part in Path(rel).parts
+            ):
+                continue
+            relative = Path(rel)
+            if (
+                relative.name.startswith(".env")
+                or relative.suffix.casefold() in {".pem", ".key", ".p12", ".pfx", ".keystore"}
+                or relative.name.casefold() in {"demo_run_log.json", "secrets.toml"}
+                or relative.parts[:2] == ("devpilot", "state")
+            ):
                 continue
             try:
                 lines = resolved.read_text(encoding="utf-8").splitlines()
@@ -59,18 +80,24 @@ class RepositoryTools:
     def _patched_content(self, patch: str) -> tuple[Path, str]:
         lines = patch.splitlines(keepends=True)
         if len(lines) < 3 or not lines[0].startswith("--- ") or not lines[1].startswith("+++ "):
-            raise ValueError("expected a unified diff for one existing file")
+            raise ValueError("expected a unified diff for one repository file")
         old_name, new_name = lines[0][4:].strip(), lines[1][4:].strip()
         if old_name.startswith("a/"):
             old_name = old_name[2:]
         if new_name.startswith("b/"):
             new_name = new_name[2:]
-        if old_name != new_name or old_name in ("/dev/null", ""):
-            raise ValueError("patch must modify one existing file")
-        path = self._path(old_name)
-        if not path.is_file():
-            raise FileNotFoundError(old_name)
-        source = path.read_text(encoding="utf-8").splitlines(keepends=True)
+        creating = lines[0][4:].strip() == "/dev/null"
+        if not new_name or new_name == "/dev/null" or (not creating and old_name != new_name):
+            raise ValueError("patch must modify or create one repository file")
+        path = self._path(new_name)
+        if creating:
+            if path.exists():
+                raise FileExistsError(new_name)
+            source: list[str] = []
+        else:
+            if not path.is_file():
+                raise FileNotFoundError(old_name)
+            source = path.read_text(encoding="utf-8").splitlines(keepends=True)
         output: list[str] = []
         cursor = 0
         i = 2
@@ -110,6 +137,8 @@ class RepositoryTools:
                 raise ValueError("hunk line counts do not match its header")
         if not saw_hunk:
             raise ValueError("patch contains no hunks")
+        if creating and not output:
+            raise ValueError("new files cannot be empty")
         output.extend(source[cursor:])
         return path, "".join(output)
 
@@ -120,7 +149,7 @@ class RepositoryTools:
     def preview_patch(self, patch: str) -> dict[str, str]:
         """Return the exact before/after content for a validated patch."""
         path, content = self._patched_content(patch)
-        before = path.read_text(encoding="utf-8")
+        before = path.read_text(encoding="utf-8") if path.exists() else ""
         return {
             "path": path.relative_to(self.repo_root).as_posix(),
             "before": before,
@@ -132,6 +161,7 @@ class RepositoryTools:
         path, content = self._patched_content(patch)
         temporary_path: Path | None = None
         try:
+            path.parent.mkdir(parents=True, exist_ok=True)
             with tempfile.NamedTemporaryFile(
                 mode="w",
                 encoding="utf-8",
@@ -148,10 +178,40 @@ class RepositoryTools:
                 temporary_path.unlink()
 
     def run_tests(self) -> subprocess.CompletedProcess[str]:
-        """Run repository tests without loading repo config, conftest, or plugins."""
+        """Run tests against a temporary copy without loading project hooks/plugins."""
         with tempfile.TemporaryDirectory(prefix="devpilot-pytest-") as config_dir:
-            config_path = Path(config_dir) / "pytest.ini"
+            temp_root = Path(config_dir)
+            config_path = temp_root / "pytest.ini"
             config_path.write_text("[pytest]\n", encoding="utf-8")
+            run_root = temp_root / self.repo_root.name
+
+            def ignore_untrusted_or_generated(directory: str, names: list[str]) -> set[str]:
+                relative_directory = Path(directory).resolve().relative_to(self.repo_root)
+                if relative_directory.parts[:2] == ("devpilot", "state"):
+                    return set(names)
+                ignored = set(shutil.ignore_patterns(
+                    ".git",
+                    ".venv",
+                    "venv",
+                    "node_modules",
+                    "__pycache__",
+                    ".pytest_cache",
+                    ".pytest_local_temp",
+                    ".pytest-tmp-debug1",
+                    ".devpilot-pytest-temp",
+                    ".env",
+                    ".env.*",
+                    "*.pem",
+                    "*.key",
+                    "*.p12",
+                    "*.pfx",
+                    "secrets.toml",
+                    "demo_run_log.json",
+                )(directory, names))
+                ignored.update(name for name in names if (Path(directory) / name).is_symlink())
+                return ignored
+
+            shutil.copytree(self.repo_root, run_root, ignore=ignore_untrusted_or_generated)
             environment = dict(os.environ)
             environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
             environment["PYTHONDONTWRITEBYTECODE"] = "1"
@@ -166,9 +226,9 @@ class RepositoryTools:
                     "no:cacheprovider",
                     "-c",
                     str(config_path),
-                    str(self.repo_root),
+                    str(run_root),
                 ],
-                cwd=self.repo_root,
+                cwd=run_root,
                 env=environment,
                 capture_output=True,
                 text=True,

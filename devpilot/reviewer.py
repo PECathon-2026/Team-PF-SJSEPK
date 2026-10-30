@@ -19,9 +19,17 @@ _RISK_PATTERNS = (
     (re.compile(r"\bexec\s*\("), "dynamic_exec", "Dynamic exec can execute untrusted input."),
     (re.compile(r"\bos\.system\s*\("), "shell_execution", "os.system executes a shell command."),
     (re.compile(r"\bshell\s*=\s*True\b"), "shell_enabled", "shell=True enables shell interpretation."),
+    (re.compile(r"\bsubprocess\.(?:run|call|Popen|check_output)\s*\([^)]*shell\s*=\s*True", re.DOTALL), "shell_execution", "Shell-enabled subprocess execution can interpret untrusted commands."),
     (re.compile(r"\bpickle\.loads?\s*\("), "unsafe_deserialization", "Pickle can execute code while deserializing untrusted data."),
     (re.compile(r"\byaml\.load\s*\("), "unsafe_yaml_load", "yaml.load may construct unsafe Python objects."),
     (re.compile(r"\bverify\s*=\s*False\b"), "tls_verification_disabled", "Disabling TLS verification permits man-in-the-middle attacks."),
+    (re.compile(r"(?i)\b(?:api[_-]?key|client[_-]?secret|password|access[_-]?token)\s*[:=]\s*['\"][A-Za-z0-9_./+=:-]{12,}['\"]"), "hardcoded_secret", "A likely credential is hard-coded in the change."),
+    (re.compile(r"\b(?:sk-or-v1-|sk-|ghp_)[A-Za-z0-9_-]{20,}\b"), "hardcoded_secret", "A likely API or access token is present in the change."),
+    (re.compile(r"\bAKIA[0-9A-Z]{16}\b"), "hardcoded_secret", "An AWS access key identifier is present in the change."),
+    (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "private_key", "A private key is present in the change."),
+    (re.compile(r"\b(?:execute|executemany)\s*\(\s*f[\"']", re.IGNORECASE), "sql_injection_risk", "An f-string is passed directly to a SQL execution function."),
+    (re.compile(r"\b(?:execute|executemany)\s*\([^)]*(?:%s|\.format\s*\()", re.IGNORECASE), "sql_injection_risk", "SQL appears to be built using string formatting instead of bound parameters."),
+    (re.compile(r"\b(?:shutil\.rmtree|os\.remove|os\.rmdir|Path\([^)]*\)\.unlink)\s*\("), "destructive_operation", "The change adds a destructive filesystem operation."),
 )
 
 
@@ -45,13 +53,14 @@ class ReviewerAgent:
             raise ValueError("review requires a single-file unified diff")
         old = lines[0][4:].split("\t", 1)[0].strip()
         new = lines[1][4:].split("\t", 1)[0].strip()
+        creating = old == "/dev/null"
         if old.startswith("a/"):
             old = old[2:]
         if new.startswith("b/"):
             new = new[2:]
-        if old != new or old in ("", "/dev/null"):
-            raise ValueError("review requires a modification to one existing file")
-        return old
+        if not new or new == "/dev/null" or (not creating and old != new):
+            raise ValueError("review requires a modification or creation of one repository file")
+        return new
 
     def review_task(self, mission_id: str, task_id: str) -> dict[str, Any]:
         mission = self._mission(mission_id)
@@ -86,7 +95,12 @@ class ReviewerAgent:
         additions = "\n".join(line[1:] for line in patch.splitlines() if line.startswith("+") and not line.startswith("+++"))
         for pattern, code, message in _RISK_PATTERNS:
             if pattern.search(additions):
-                issues.append({"category": "security", "code": code, "severity": "high", "message": message})
+                issues.append({
+                    "category": "security",
+                    "code": code,
+                    "severity": "critical" if code in {"hardcoded_secret", "private_key"} else "high",
+                    "message": message,
+                })
 
         for name, content in source.items():
             if name.endswith(".py"):

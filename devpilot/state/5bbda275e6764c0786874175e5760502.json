@@ -1,0 +1,222 @@
+{
+  "mission_id": "5bbda275e6764c0786874175e5760502",
+  "user_request": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+      "acceptance_criteria": [
+        "Verify that: Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "status": "failed",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+      "acceptance_criteria": [
+        "Verify that: Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 3 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    }
+  ],
+  "test_results": [],
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T20:17:09.539930+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.595288+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "tool_selected",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.599235+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.606849+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.669043+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.672763+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.729470+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.733485+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:09.740233+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_selection",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "developer",
+      "task_id": "task-1",
+      "tools": [
+        "repository.read_file",
+        "repository.validate_patch",
+        "repository.apply_patch",
+        "repository.run_tests"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:17:14.218199+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "agent": "developer",
+      "tool": "repository.read_file"
+    },
+    {
+      "timestamp": "2026-10-29T20:17:14.278658+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:17:14.288778+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:17:14.296957+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "patch_generation_failed",
+      "mission_id": "5bbda275e6764c0786874175e5760502",
+      "task_id": "task-1",
+      "attempt": 1,
+      "error": "RuntimeError: OpenRouter API key missing. Create a key in your OpenRouter account and set OPENROUTER_API_KEY in the process environment."
+    },
+    {
+      "timestamp": "2026-10-29T20:17:14.305412+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

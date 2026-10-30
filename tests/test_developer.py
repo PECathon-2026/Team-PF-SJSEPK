@@ -7,6 +7,21 @@ from devpilot.repository_tools import RepositoryTools
 PATCH = "--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+answer = 42\n"
 
 
+def test_developer_selects_context_tools_based_on_reconnaissance():
+    selected_with_context = DeveloperAgent.select_tools({"relevant_files": ["sample.py"]})
+    selected_without_context = DeveloperAgent.select_tools({"relevant_files": []})
+    assert "repository.read_file" in selected_with_context
+    assert "repository.search" not in selected_with_context
+    assert "repository.search" in selected_without_context
+    assert "repository.read_file" not in selected_without_context
+    for selected in (selected_with_context, selected_without_context):
+        assert {
+            "repository.validate_patch",
+            "repository.apply_patch",
+            "repository.run_tests",
+        } <= set(selected)
+
+
 @pytest.fixture
 def setup(tmp_path):
     root = tmp_path / "demo_repo"

@@ -1,0 +1,329 @@
+{
+  "created_at": "2026-10-29T20:08:07.884957+00:00",
+  "request": "Add greet(name) to sample.py and return the personalized greeting.",
+  "result": "completed",
+  "mission_id": "a61646a4a5b84f33b987250df362dda6",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Add greet(name) to sample.py and return the personalized greeting.",
+      "acceptance_criteria": [
+        "Verify that: Add greet(name) to sample.py and return the personalized greeting."
+      ],
+      "relevant_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "patch_proposals": [
+    {
+      "type": "patch_proposal",
+      "proposal_id": "adc4ce78e1e0426085f790f5378150a4",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -1,2 +1,5 @@\n # Demo repository for the DevPilot feedback-loop walkthrough.\n message = \"hello from demo_repo\"\n+\n+def greet(name):\n+    return f\"Hi, {name}!\"\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "ffbbb81c52f0401e9d7edaa416a860f0",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -5 +5 @@\n-    return f\"Hi, {name}!\"\n+    return f\"Hello, {name}!\"\n",
+      "status": "applied",
+      "outcome": "patch applied"
+    }
+  ],
+  "test_attempts": [
+    {
+      "task_id": "task-1",
+      "attempt": 1,
+      "returncode": 1,
+      "passed": false,
+      "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________________ test_greeting_is_personalized ________________________\n\n    def test_greeting_is_personalized():\n>       assert sample.greet(\"Ada\") == \"Hello, Ada!\"\nE       AssertionError: assert 'Hi, Ada!' == 'Hello, Ada!'\nE         \nE         - Hello, Ada!\nE         + Hi, Ada!\n\ntest_sample.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED test_sample.py::test_greeting_is_personalized - AssertionError: assert...\n1 failed in 0.08s\n",
+      "stderr": "",
+      "command": "python -m pytest -q --noconftest -p no:cacheprovider -c <temporary pytest.ini> <temporary repository copy>"
+    },
+    {
+      "task_id": "task-1",
+      "attempt": 2,
+      "returncode": 0,
+      "passed": true,
+      "stdout": ".                                                                        [100%]\n1 passed in 0.01s\n",
+      "stderr": "",
+      "command": "python -m pytest -q --noconftest -p no:cacheprovider -c <temporary pytest.ini> <temporary repository copy>"
+    }
+  ],
+  "agent_messages": [
+    {
+      "type": "agent_message",
+      "from_agent": "sentinel",
+      "to_agent": "developer",
+      "task_id": "task-1",
+      "attempt": 1,
+      "message": "Use the recorded test output and review findings to revise the next patch.",
+      "evidence": {
+        "test_result": {
+          "passed": false,
+          "returncode": 1,
+          "stdout": "F                                                                        [100%]\n================================== FAILURES ===================================\n________________________ test_greeting_is_personalized ________________________\n\n    def test_greeting_is_personalized():\n>       assert sample.greet(\"Ada\") == \"Hello, Ada!\"\nE       AssertionError: assert 'Hi, Ada!' == 'Hello, Ada!'\nE         \nE         - Hello, Ada!\nE         + Hi, Ada!\n\ntest_sample.py:4: AssertionError\n=========================== short test summary info ===========================\nFAILED test_sample.py::test_greeting_is_personalized - AssertionError: assert...\n1 failed in 0.08s\n",
+          "stderr": "",
+          "error": ""
+        },
+        "review_findings": []
+      }
+    }
+  ],
+  "review_findings": [
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "adc4ce78e1e0426085f790f5378150a4",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Add greet(name) to sample.py and return the personalized greeting.",
+          "status": "addressed",
+          "matched_terms": [
+            "greet",
+            "name",
+            "return"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    },
+    {
+      "type": "review",
+      "task_id": "task-1",
+      "proposal_id": "ffbbb81c52f0401e9d7edaa416a860f0",
+      "status": "pass",
+      "criteria": [
+        {
+          "criterion": "Verify that: Add greet(name) to sample.py and return the personalized greeting.",
+          "status": "addressed",
+          "matched_terms": [
+            "name",
+            "return"
+          ]
+        }
+      ],
+      "findings": [],
+      "reviewed_files": [
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "activity": [
+    {
+      "event": "tool_selected",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 2 relevant file(s)"
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_count": 1
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "event": "tool_selection",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "task_id": "task-1",
+      "tools": [
+        "repository.read_file",
+        "repository.validate_patch",
+        "repository.apply_patch",
+        "repository.run_tests"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "tool": "repository.read_file"
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "tool": "repository.validate_patch"
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "proposal_id": "adc4ce78e1e0426085f790f5378150a4",
+      "attempt": 1
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "tool": "repository.apply_patch"
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "proposal_id": "adc4ce78e1e0426085f790f5378150a4"
+    },
+    {
+      "event": "review_started",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 1,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 1
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "sentinel",
+      "tool": "repository.run_tests"
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 1,
+      "passed": false,
+      "returncode": 1,
+      "timed_out": false
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 1,
+      "tests_passed": false,
+      "review_status": "pass"
+    },
+    {
+      "event": "retry_started",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "retry": 1
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "tool": "repository.validate_patch"
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "proposal_id": "ffbbb81c52f0401e9d7edaa416a860f0",
+      "attempt": 2
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "developer",
+      "tool": "repository.apply_patch"
+    },
+    {
+      "event": "patch_applied",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "proposal_id": "ffbbb81c52f0401e9d7edaa416a860f0"
+    },
+    {
+      "event": "review_started",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "event": "review_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 2,
+      "status": "pass",
+      "finding_count": 0
+    },
+    {
+      "event": "tests_started",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 2
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "agent": "sentinel",
+      "tool": "repository.run_tests"
+    },
+    {
+      "event": "tests_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 2,
+      "passed": true,
+      "returncode": 0,
+      "timed_out": false
+    },
+    {
+      "event": "verification_completed",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "task_id": "task-1",
+      "attempt": 2,
+      "tests_passed": true,
+      "review_status": "pass"
+    },
+    {
+      "event": "mission_finished",
+      "mission_id": "a61646a4a5b84f33b987250df362dda6",
+      "status": "completed"
+    }
+  ],
+  "feedback_loop_verified": true,
+  "note": "The recovery patch is selected only after the actual failing-test output is persisted and passed to the developer callback."
+}

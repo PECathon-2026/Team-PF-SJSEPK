@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 from collections.abc import Callable
 from pathlib import Path
+import re
 import subprocess
 from threading import Event
 from typing import Any
@@ -16,6 +17,7 @@ from .reviewer import ReviewerAgent
 
 PatchProvider = Callable[[dict[str, Any], int], str | None]
 ApprovalProvider = Callable[[str, dict[str, Any]], bool]
+ClarificationProvider = Callable[[str], str | None]
 MAX_RETRIES = 3
 
 
@@ -35,6 +37,7 @@ def run_mission(
     max_retries: int = 1,
     activity_callback: Callable[[dict[str, Any]], None] | None = None,
     cancel_event: Event | None = None,
+    clarification_provider: ClarificationProvider | None = None,
 ) -> dict[str, Any]:
     """Run plan, approve, patch, review, and test steps with bounded retries."""
     if isinstance(max_retries, bool) or not isinstance(max_retries, int) or not 0 <= max_retries <= MAX_RETRIES:
@@ -62,8 +65,43 @@ def run_mission(
         update_mission(mission_id, {"status": "cancelled"}, state_dir=state_dir)
         log("mission_cancelled")
         return load_mission(mission_id, state_dir=state_dir)
-    plan = planner.plan_mission(
-        mission_id,
+    effective_request = user_request
+    question = planner.clarification_question(user_request)
+    if question:
+        log("clarification_requested", question=question)
+        answer = clarification_provider(question) if clarification_provider else None
+        if not isinstance(answer, str) or not answer.strip():
+            current = load_mission(mission_id, state_dir=state_dir)
+            update_mission(
+                mission_id,
+                {
+                    "status": "cancelled",
+                    "findings": [*current["findings"], {
+                        "type": "clarification",
+                        "question": question,
+                        "status": "unanswered",
+                    }],
+                },
+                state_dir=state_dir,
+            )
+            log("clarification_unanswered")
+            return load_mission(mission_id, state_dir=state_dir)
+        effective_request = answer.strip()
+        current = load_mission(mission_id, state_dir=state_dir)
+        update_mission(
+            mission_id,
+            {"findings": [*current["findings"], {
+                "type": "clarification",
+                "question": question,
+                "answer": answer.strip(),
+                "status": "answered",
+            }]},
+            state_dir=state_dir,
+        )
+        log("clarification_answered")
+    log("tool_selected", agent="repository_scout", tool="repository.search")
+    plan = planner.create_plan(
+        effective_request,
         activity_callback=lambda item: log(
             "agent_activity",
             agent=item["agent"],
@@ -71,7 +109,9 @@ def run_mission(
             summary=item["summary"],
         ),
     )
+    planner.save_plan(mission_id, plan)
     log("plan_created", task_count=len(plan["tasks"]))
+    log("tool_used", agent="repository_scout", tool="repository.search")
     if not plan["tasks"]:
         update_mission(mission_id, {"status": "failed"}, state_dir=state_dir)
         log("mission_failed", reason="planner returned no tasks")
@@ -89,21 +129,66 @@ def run_mission(
             update_mission(mission_id, {"status": "cancelled", "test_results": test_attempts}, state_dir=state_dir)
             log("approval_denied", stage="task", task_id=task_id)
             return load_mission(mission_id, state_dir=state_dir)
+        selected_tools = developer.select_tools(task)
+        if "repository.search" in selected_tools:
+            discovered = {
+                path
+                for term in re.findall(r"[A-Za-z_][A-Za-z_0-9]*", task.get("description", ""))
+                if len(term) > 2
+                for path, _, _ in repo.search(term)
+            }
+            task = {**task, "relevant_files": sorted(discovered)}
+            current = load_mission(mission_id, state_dir=state_dir)
+            updated_tasks = [
+                task if item.get("task_id") == task_id else item
+                for item in current["tasks"]
+            ]
+            update_mission(mission_id, {"tasks": updated_tasks}, state_dir=state_dir)
+            selected_tools = developer.select_tools(task, search_completed=True)
+            selected_tools.insert(0, "repository.search")
+            log("tool_used", agent="developer", tool="repository.search")
+        log(
+            "tool_selection",
+            agent="developer",
+            task_id=task_id,
+            tools=selected_tools,
+        )
+        if "repository.read_file" in selected_tools:
+            log("tool_used", agent="developer", tool="repository.read_file")
         developer.accept_task(mission_id, task_id, approved=True)
         task_passed = False
+        retry_feedback: dict[str, Any] | None = None
         for attempt in range(max_retries + 1):
-            patch = patch_provider(task, attempt)
+            task_context = {**task, "retry_feedback": retry_feedback}
+            try:
+                patch = patch_provider(task_context, attempt)
+            except (OSError, RuntimeError, ValueError) as exc:
+                update_mission(mission_id, {"status": "failed", "test_results": test_attempts}, state_dir=state_dir)
+                log("patch_generation_failed", task_id=task_id, attempt=attempt + 1, error=f"{type(exc).__name__}: {exc}")
+                return load_mission(mission_id, state_dir=state_dir)
             if not patch:
                 update_mission(mission_id, {"status": "cancelled", "test_results": test_attempts}, state_dir=state_dir)
                 log("patch_not_provided", task_id=task_id, attempt=attempt + 1)
                 return load_mission(mission_id, state_dir=state_dir)
             try:
+                log("tool_used", agent="developer", tool="repository.validate_patch")
                 proposal_id = developer.propose_patch(mission_id, task_id, patch)
             except (ValueError, FileNotFoundError) as exc:
                 log("patch_rejected", task_id=task_id, attempt=attempt + 1, reason=str(exc))
                 if attempt == max_retries:
                     final_pass = False
                     break
+                retry_feedback = {"patch_error": str(exc)}
+                current = load_mission(mission_id, state_dir=state_dir)
+                message = {
+                    "type": "agent_message",
+                    "from_agent": "developer",
+                    "to_agent": "developer",
+                    "task_id": task_id,
+                    "attempt": attempt + 1,
+                    "message": f"Patch validation rejected the proposal: {exc}",
+                }
+                update_mission(mission_id, {"findings": [*current["findings"], message]}, state_dir=state_dir)
                 increment_retry()
                 continue
             log("patch_proposed", task_id=task_id, proposal_id=proposal_id, attempt=attempt + 1)
@@ -115,6 +200,7 @@ def run_mission(
                 update_mission(mission_id, {"status": "cancelled", "test_results": test_attempts}, state_dir=state_dir)
                 log("mission_cancelled", task_id=task_id, proposal_id=proposal_id)
                 return load_mission(mission_id, state_dir=state_dir)
+            log("tool_used", agent="developer", tool="repository.apply_patch")
             developer.apply_proposal(mission_id, proposal_id, approved=True)
             log("patch_applied", task_id=task_id, proposal_id=proposal_id)
             log("review_started", task_id=task_id, attempt=attempt + 1)
@@ -126,38 +212,53 @@ def run_mission(
                 status=review["status"],
                 finding_count=len(review["findings"]),
             )
-            try:
-                log("tests_started", task_id=task_id, attempt=attempt + 1)
-                completed = repo.run_tests()
-                result = {
-                    "task_id": task_id,
-                    "attempt": attempt + 1,
-                    "command": _command_args(completed.args),
-                    "returncode": completed.returncode,
-                    "passed": completed.returncode == 0,
-                    "stdout": completed.stdout,
-                    "stderr": completed.stderr,
-                }
-            except subprocess.TimeoutExpired as exc:
-                stdout = exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
-                stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
-                result = {
-                    "task_id": task_id,
-                    "attempt": attempt + 1,
-                    "command": _command_args(exc.cmd),
-                    "passed": False,
-                    "timed_out": True,
-                    "error": f"test command exceeded its time limit: {exc}",
-                    "stdout": stdout,
-                    "stderr": stderr,
-                }
-            except OSError as exc:
+            blocking_findings = [
+                finding for finding in review["findings"]
+                if finding.get("category") == "security"
+                and finding.get("severity") in {"critical", "high"}
+            ]
+            if blocking_findings:
                 result = {
                     "task_id": task_id,
                     "attempt": attempt + 1,
                     "passed": False,
-                    "error": f"{type(exc).__name__}: {exc}",
+                    "skipped": True,
+                    "error": "tests were not run because the independent review found a high-risk security issue",
                 }
+            else:
+                try:
+                    log("tests_started", task_id=task_id, attempt=attempt + 1)
+                    log("tool_used", agent="sentinel", tool="repository.run_tests")
+                    completed = repo.run_tests()
+                    result = {
+                        "task_id": task_id,
+                        "attempt": attempt + 1,
+                        "command": _command_args(completed.args),
+                        "returncode": completed.returncode,
+                        "passed": completed.returncode == 0,
+                        "stdout": completed.stdout,
+                        "stderr": completed.stderr,
+                    }
+                except subprocess.TimeoutExpired as exc:
+                    stdout = exc.stdout.decode(errors="replace") if isinstance(exc.stdout, bytes) else (exc.stdout or "")
+                    stderr = exc.stderr.decode(errors="replace") if isinstance(exc.stderr, bytes) else (exc.stderr or "")
+                    result = {
+                        "task_id": task_id,
+                        "attempt": attempt + 1,
+                        "command": _command_args(exc.cmd),
+                        "passed": False,
+                        "timed_out": True,
+                        "error": f"test command exceeded its time limit: {exc}",
+                        "stdout": stdout,
+                        "stderr": stderr,
+                    }
+                except OSError as exc:
+                    result = {
+                        "task_id": task_id,
+                        "attempt": attempt + 1,
+                        "passed": False,
+                        "error": f"{type(exc).__name__}: {exc}",
+                    }
             test_attempts.append(result)
             update_mission(mission_id, {"test_results": test_attempts}, state_dir=state_dir)
             verified = result["passed"] and review["status"] == "pass"
@@ -174,6 +275,32 @@ def run_mission(
                 task_passed = True
                 break
             if attempt < max_retries:
+                retry_feedback = {
+                    "test_result": {
+                        "passed": result["passed"],
+                        "returncode": result.get("returncode"),
+                        "stdout": result.get("stdout", ""),
+                        "stderr": result.get("stderr", ""),
+                        "error": result.get("error", ""),
+                    },
+                    "review_findings": review["findings"],
+                }
+                current = load_mission(mission_id, state_dir=state_dir)
+                sources = []
+                if not result["passed"]:
+                    sources.append("sentinel")
+                if review["status"] != "pass":
+                    sources.append("reviewer")
+                message = {
+                    "type": "agent_message",
+                    "from_agent": "+".join(sources) or "verification",
+                    "to_agent": "developer",
+                    "task_id": task_id,
+                    "attempt": attempt + 1,
+                    "message": "Use the recorded test output and review findings to revise the next patch.",
+                    "evidence": retry_feedback,
+                }
+                update_mission(mission_id, {"findings": [*current["findings"], message]}, state_dir=state_dir)
                 increment_retry()
                 log("retry_started", task_id=task_id, retry=attempt + 1)
         if not task_passed:
@@ -214,6 +341,15 @@ def _approve(stage: str, details: dict[str, Any]) -> bool:
         return False
 
 
+def _clarify(question: str) -> str | None:
+    print(f"Clarification needed: {question}")
+    try:
+        answer = input("Your clarification (blank to cancel): ").strip()
+    except EOFError:
+        return None
+    return answer or None
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Run a DevPilot coding mission against demo_repo")
     parser.add_argument("--request", required=True, help="coding task request")
@@ -247,7 +383,14 @@ def main(argv: list[str] | None = None) -> int:
         elif event == "mission_finished":
             print(f"Mission finished: {entry['status']}")
 
-    mission = run_mission(args.request, _read_patch, _approve, max_retries=args.max_retries, activity_callback=show)
+    mission = run_mission(
+        args.request,
+        _read_patch,
+        _approve,
+        max_retries=args.max_retries,
+        activity_callback=show,
+        clarification_provider=_clarify,
+    )
     print("Activity log:")
     for item in mission["activity_log"]:
         print(f"- {item['event']}")

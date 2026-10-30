@@ -1,5 +1,6 @@
 ﻿import json
 import os
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -88,3 +89,48 @@ def test_reject_invalid_state_and_mission_id(tmp_path):
     assert load_mission(mission["mission_id"], state_dir=tmp_path) == original
     with pytest.raises(ValueError, match="mission id"):
         load_mission("../outside", state_dir=tmp_path)
+
+
+def test_recover_stale_missions_closes_only_inactive_running_records(tmp_path):
+    stale = create_mission("stale run", state_dir=tmp_path)
+    recent = create_mission("recent run", state_dir=tmp_path)
+    active = create_mission("active run", state_dir=tmp_path)
+    for mission in (stale, recent, active):
+        update_mission(mission["mission_id"], {"status": "running"}, state_dir=tmp_path)
+
+    stale_path = tmp_path / f"{stale['mission_id']}.json"
+    stale_data = json.loads(stale_path.read_text(encoding="utf-8"))
+    old_time = (datetime.now(timezone.utc) - timedelta(hours=2)).isoformat()
+    for entry in stale_data["activity_log"]:
+        entry["timestamp"] = old_time
+    stale_path.write_text(json.dumps(stale_data), encoding="utf-8")
+
+    recovered = mission_state.recover_stale_missions(
+        state_dir=tmp_path,
+        exclude_ids={active["mission_id"]},
+    )
+
+    assert recovered == [stale["mission_id"]]
+    assert load_mission(stale["mission_id"], state_dir=tmp_path)["status"] == "cancelled"
+    assert load_mission(recent["mission_id"], state_dir=tmp_path)["status"] == "running"
+    assert load_mission(active["mission_id"], state_dir=tmp_path)["status"] == "running"
+    assert load_mission(stale["mission_id"], state_dir=tmp_path)["activity_log"][-2]["event"] == "mission_recovered"
+
+
+def test_recover_mission_when_its_worker_is_orphaned(tmp_path):
+    mission = create_mission("interrupted run", state_dir=tmp_path)
+    update_mission(mission["mission_id"], {"status": "running"}, state_dir=tmp_path)
+
+    recovered = mission_state.recover_stale_missions(
+        state_dir=tmp_path,
+        orphaned_ids={mission["mission_id"]},
+    )
+
+    closed = load_mission(mission["mission_id"], state_dir=tmp_path)
+    assert recovered == [mission["mission_id"]]
+    assert closed["status"] == "cancelled"
+    assert any(
+        entry.get("event") == "mission_recovered"
+        and "stopped unexpectedly" in entry.get("reason", "")
+        for entry in closed["activity_log"]
+    )

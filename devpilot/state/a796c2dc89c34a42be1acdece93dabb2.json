@@ -35,7 +35,7 @@
       ]
     }
   ],
-  "status": "running",
+  "status": "cancelled",
   "findings": [
     {
       "type": "plan",
@@ -146,6 +146,19 @@
       "event": "mission_updated",
       "fields": [
         "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:18:43.091319+00:00",
+      "event": "mission_recovered",
+      "reason": "No progress was recorded for more than 30 minutes."
+    },
+    {
+      "timestamp": "2026-10-30T01:18:43.091532+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log",
+        "status"
       ]
     }
   ]

@@ -1,0 +1,222 @@
+{
+  "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+  "user_request": "make a login page",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "make a login page",
+      "acceptance_criteria": [
+        "Verify that: make a login page"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "status": "failed",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "make a login page",
+      "acceptance_criteria": [
+        "Verify that: make a login page"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 3 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    }
+  ],
+  "test_results": [],
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-29T20:35:46.566152+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.573724+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "tool_selected",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.627791+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.633979+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.658986+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.664870+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.669116+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.673015+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:46.676188+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_selection",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "developer",
+      "task_id": "task-1",
+      "tools": [
+        "repository.read_file",
+        "repository.validate_patch",
+        "repository.apply_patch",
+        "repository.run_tests"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:35:51.860221+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "agent": "developer",
+      "tool": "repository.read_file"
+    },
+    {
+      "timestamp": "2026-10-29T20:35:51.899662+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:35:51.904796+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "timestamp": "2026-10-29T20:35:51.910975+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "patch_generation_failed",
+      "mission_id": "6444a462fa8a41d5a63bc4701a93b6f2",
+      "task_id": "task-1",
+      "attempt": 1,
+      "error": "RuntimeError: openrouter API key missing. Set OPENROUTER_API_KEY in the process environment."
+    },
+    {
+      "timestamp": "2026-10-29T20:35:51.917837+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}

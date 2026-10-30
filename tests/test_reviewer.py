@@ -50,6 +50,24 @@ def test_review_detects_security_risk(review_setup):
     assert any(finding["code"] == "dynamic_eval" for finding in result["findings"])
 
 
+@pytest.mark.parametrize(
+    ("replacement", "expected_code"),
+    [
+        ('api_key = "sensitive-access-token-12345"  # answer = 42', "hardcoded_secret"),
+        ('cursor.execute(f"SELECT * FROM users WHERE id={user_id}")  # answer = 42', "sql_injection_risk"),
+        ('shutil.rmtree(target)  # answer = 42', "destructive_operation"),
+    ],
+)
+def test_review_detects_secrets_injection_and_destructive_operations(review_setup, replacement, expected_code):
+    _, _, state_dir, mission, repository, developer = review_setup
+    patch = f"--- a/sample.py\n+++ b/sample.py\n@@ -1 +1 @@\n-answer = 41\n+{replacement}\n"
+    proposal_id = developer.propose_patch(mission["mission_id"], "task-1", patch)
+    developer.apply_proposal(mission["mission_id"], proposal_id, approved=True)
+    result = ReviewerAgent(repository, state_dir=state_dir).review_task(mission["mission_id"], "task-1")
+    assert result["status"] == "fail"
+    assert any(finding["code"] == expected_code for finding in result["findings"])
+
+
 def test_reviewer_accepts_utf8_bom_in_python_files(review_setup):
     root, _, state_dir, mission, repository, developer = review_setup
     bom_file = root / "bom_module.py"

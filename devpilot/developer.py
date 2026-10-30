@@ -14,6 +14,20 @@ class DeveloperAgent:
         self.repository = repository or RepositoryTools()
         self.state_dir = state_dir
 
+    @staticmethod
+    def select_tools(task: dict[str, Any], *, search_completed: bool = False) -> list[str]:
+        tools = []
+        if task.get("relevant_files"):
+            tools.append("repository.read_file")
+        elif not search_completed:
+            tools.append("repository.search")
+        tools.extend([
+            "repository.validate_patch",
+            "repository.apply_patch",
+            "repository.run_tests",
+        ])
+        return tools
+
     def _mission(self, mission_id: str) -> dict[str, Any]:
         mission = load_mission(mission_id, state_dir=self.state_dir)
         if mission is None:

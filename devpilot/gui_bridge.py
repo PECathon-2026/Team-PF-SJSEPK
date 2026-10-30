@@ -7,6 +7,7 @@ from queue import Empty, Queue
 from threading import Event
 from typing import Any
 
+from .codegen import generate_patch
 from .orchestrator import run_mission
 from .repository_tools import RepositoryTools
 
@@ -32,6 +33,15 @@ class Interaction:
 
 def mission_stages(mission: dict[str, Any]) -> dict[str, str]:
     """Derive dashboard stage labels strictly from persisted mission records."""
+    if mission.get("status") == "cancelled":
+        return {
+            "Planner": "Cancelled",
+            "Developer": "Cancelled",
+            "Reviewer": "Cancelled",
+            "Tests": "Cancelled",
+            "Mission": "cancelled",
+        }
+
     findings = mission.get("findings", [])
     plan_ready = any(item.get("type") == "plan" for item in findings)
     approvals = [item for item in findings if item.get("type") == "task_approval"]
@@ -73,6 +83,7 @@ def run_mission_worker(
     state_dir: str | Path | None = None,
     max_retries: int = 1,
     cancel_event: Event | None = None,
+    use_llm: bool = False,
 ) -> None:
     """Run the existing synchronous mission flow on a worker thread."""
     def ask(kind: str, **details: Any) -> Any:
@@ -81,10 +92,16 @@ def run_mission_worker(
         return interaction.wait(cancel_event)
 
     def patch_provider(task: dict[str, Any], attempt: int) -> str | None:
+        if use_llm:
+            return generate_patch(repository or RepositoryTools(), task, user_request, attempt=attempt)
         return ask("patch", task=task, attempt=attempt)
 
     def approval_provider(stage: str, details: dict[str, Any]) -> bool:
         return bool(ask("approval", stage=stage, details=details))
+
+    def clarification_provider(question: str) -> str | None:
+        answer = ask("clarification", question=question)
+        return answer if isinstance(answer, str) else None
 
     try:
         mission = run_mission(
@@ -95,6 +112,7 @@ def run_mission_worker(
             state_dir=state_dir,
             max_retries=max_retries,
             cancel_event=cancel_event,
+            clarification_provider=clarification_provider,
             activity_callback=lambda entry: events.put({"kind": "activity", "entry": entry}),
         )
         events.put({"kind": "result", "mission": mission})

@@ -2,7 +2,7 @@
   "mission_id": "5013c28a3ceb4c8c8d2bdfeab9514bb1",
   "user_request": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
   "tasks": [],
-  "status": "running",
+  "status": "cancelled",
   "findings": [],
   "test_results": null,
   "retry_count": 0,
@@ -44,6 +44,19 @@
       "event": "mission_updated",
       "fields": [
         "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:18:43.081679+00:00",
+      "event": "mission_recovered",
+      "reason": "No progress was recorded for more than 30 minutes."
+    },
+    {
+      "timestamp": "2026-10-30T01:18:43.081937+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log",
+        "status"
       ]
     }
   ]

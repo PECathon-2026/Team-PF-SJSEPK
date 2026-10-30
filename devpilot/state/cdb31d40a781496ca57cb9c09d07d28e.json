@@ -1,0 +1,263 @@
+{
+  "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+  "user_request": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+  "tasks": [
+    {
+      "task_id": "task-1",
+      "description": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+      "acceptance_criteria": [
+        "Verify that: Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ]
+    }
+  ],
+  "status": "cancelled",
+  "findings": [
+    {
+      "type": "plan",
+      "summary": "Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)",
+      "acceptance_criteria": [
+        "Verify that: Add a multiply(a, b) function to sample.py that returns a * b and returns 12 for multiply(3, 4)"
+      ],
+      "relevant_files": [
+        "TASK.md",
+        "sample.py",
+        "test_sample.py"
+      ],
+      "planning_agents": [
+        {
+          "agent": "requirements_analyst",
+          "role": "Decompose the request into actionable tasks",
+          "status": "completed",
+          "output": "Identified 1 task(s)"
+        },
+        {
+          "agent": "repository_scout",
+          "role": "Find relevant files using read-only repository search",
+          "status": "completed",
+          "output": "Mapped 3 relevant file(s)"
+        },
+        {
+          "agent": "acceptance_criteria_analyst",
+          "role": "Attach a verifiable criterion to every task",
+          "status": "completed",
+          "output": "Prepared 1 acceptance criterion/criteria"
+        }
+      ]
+    },
+    {
+      "type": "task_approval",
+      "task_id": "task-1",
+      "approved": true
+    },
+    {
+      "type": "patch_proposal",
+      "proposal_id": "f897b5e41037424988fd02cc6c13fef2",
+      "task_id": "task-1",
+      "patch": "--- a/sample.py\n+++ b/sample.py\n@@ -5 +5,4 @@\n     return f\"Hello, {name}!\"\n+\n+def multiply(a, b):\n+    return a * b",
+      "status": "proposed"
+    }
+  ],
+  "test_results": [],
+  "retry_count": 0,
+  "activity_log": [
+    {
+      "timestamp": "2026-10-30T01:40:30.673024+00:00",
+      "event": "mission_created"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:30.687801+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status"
+      ]
+    },
+    {
+      "event": "tool_selected",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:30.700318+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "requirements_analyst",
+      "status": "completed",
+      "summary": "Identified 1 task(s)"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:30.712548+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "repository_scout",
+      "status": "completed",
+      "summary": "Mapped 3 relevant file(s)"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:31.361194+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "agent_activity",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "acceptance_criteria_analyst",
+      "status": "completed",
+      "summary": "Prepared 1 acceptance criterion/criteria"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:31.372797+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:40:31.381729+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings",
+        "tasks"
+      ]
+    },
+    {
+      "event": "plan_created",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "task_count": 1
+    },
+    {
+      "timestamp": "2026-10-30T01:40:31.388318+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "repository_scout",
+      "tool": "repository.search"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:31.396698+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_selection",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "developer",
+      "task_id": "task-1",
+      "tools": [
+        "repository.read_file",
+        "repository.validate_patch",
+        "repository.apply_patch",
+        "repository.run_tests"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:40:36.839022+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "developer",
+      "tool": "repository.read_file"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:36.852910+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:40:36.870913+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "tool_used",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "agent": "developer",
+      "tool": "repository.validate_patch"
+    },
+    {
+      "timestamp": "2026-10-30T01:40:50.708648+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:40:50.720590+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "findings"
+      ]
+    },
+    {
+      "event": "patch_proposed",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "task_id": "task-1",
+      "proposal_id": "f897b5e41037424988fd02cc6c13fef2",
+      "attempt": 1
+    },
+    {
+      "timestamp": "2026-10-30T01:40:50.733406+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    },
+    {
+      "timestamp": "2026-10-30T01:41:00.622603+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "status",
+        "test_results"
+      ]
+    },
+    {
+      "event": "approval_denied",
+      "mission_id": "cdb31d40a781496ca57cb9c09d07d28e",
+      "stage": "patch",
+      "task_id": "task-1",
+      "proposal_id": "f897b5e41037424988fd02cc6c13fef2"
+    },
+    {
+      "timestamp": "2026-10-30T01:41:00.643795+00:00",
+      "event": "mission_updated",
+      "fields": [
+        "activity_log"
+      ]
+    }
+  ]
+}
